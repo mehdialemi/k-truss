@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.Optional;
 import org.apache.spark.storage.StorageLevel;
 import scala.Tuple2;
 
@@ -14,15 +15,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import static ir.ac.sbu.sbm.Triangle.META_LEN;
+
 public class KTruss {
     private static final int INVALID = -1;
-    public static final int META_LEN = 4;
     public static final int CHECKPOINT_ITERATION = 50;
+    public static final int[] RE_COMP_VAL = new int[] {0, 0};
 
     public static void main(String[] args) {
         ArgumentReader argumentReader = new ArgumentReader(args);
         String input = argumentReader.nextString("/home/mehdi/graph-data/com-youtube.ungraph.txt");
         int k = argumentReader.nextInt(4);
+        int plus = argumentReader.nextInt(3);
         int cores = argumentReader.nextInt(2);
         int partitions = argumentReader.nextInt(4);
         int kCoreIteration = argumentReader.nextInt(1000);
@@ -44,12 +48,12 @@ public class KTruss {
                 ", kCoreIteration: " + kCoreIteration);
 
         long t1 = System.currentTimeMillis();
-        JavaPairRDD <Edge, int[]> subgraph = find(k, sc, input, partitions, kCoreIteration);
+        JavaPairRDD <Edge, int[]> subgraph = find(k, k + plus, sc, input, partitions, kCoreIteration);
         long t2 = System.currentTimeMillis();
         System.out.println("KTruss edge count: " + subgraph.count() + ", duration: " + (t2 - t1) + " ms");
     }
 
-    public static JavaPairRDD <Edge, int[]> find(int k, JavaSparkContext sc, String input, int partitions,
+    public static JavaPairRDD <Edge, int[]> find(int k, int h, JavaSparkContext sc, String input, int partitions,
                                                  int kCoreIterations) {
         JavaPairRDD <Integer, Integer> edges = EdgeLoader.load(sc, input);
 
@@ -58,15 +62,31 @@ public class KTruss {
         JavaPairRDD <Integer, int[]> kCore = KCore.find(k - 1, neighbors, kCoreIterations);
 
         long t1 = System.currentTimeMillis();
-        JavaPairRDD <Edge, int[]> tSet = Triangle.createTSet(kCore, partitions);
+        JavaPairRDD <Edge, int[]> tSet = Triangle.createTSet(kCore, partitions, h);
         System.out.println("tSet count: " + tSet.count() + ", time: " + (System.currentTimeMillis() - t1) + " ms");
 
-        return process(k - 2, tSet);
+        return process(k, tSet, h);
     }
 
-    private static JavaPairRDD <Edge, int[]> process(final int minSup, JavaPairRDD <Edge, int[]> tSet) {
+    private static JavaPairRDD<Edge, int[]> reTSet(JavaPairRDD<Edge, int[]> tSet, int k, int partitions, int h) {
+        JavaPairRDD <Integer, Integer> edges = tSet.flatMapToPair(kv -> {
+            List<Tuple2<Integer, Integer>> list = new ArrayList<>();
+            list.add(new Tuple2 <>(kv._1.v1, kv._1.v2));
+            list.add(new Tuple2 <>(kv._1.v2, kv._1.v1));
+            return list.iterator();
+        });
+        JavaPairRDD <Integer, int[]> neighbors = EdgeLoader.createNeighbors(edges);
+        JavaPairRDD <Integer, int[]> kCore = KCore.find(k - 1, neighbors, 1);
+        long t1 = System.currentTimeMillis();
+        JavaPairRDD <Edge, int[]> tSet2 = Triangle.createTSet(kCore, partitions, h);
+        System.out.println("tSet count: " + tSet2.count() + ", time: " + (System.currentTimeMillis() - t1) + " ms");
+        return tSet2;
+    }
+
+    private static JavaPairRDD <Edge, int[]> process(final int k, JavaPairRDD <Edge, int[]> tSet, int h) {
         int numPartitions = tSet.getNumPartitions();
 
+        final int minSup = k - 2;
         Queue <JavaPairRDD <Edge, int[]>> tSetQueue = new LinkedList <>();
         Queue <JavaPairRDD <Edge, int[]>> invQueue = new LinkedList <>();
         tSetQueue.add(tSet);
@@ -82,7 +102,18 @@ public class KTruss {
             }
 
             // Detect invalid edges by comparing the support of triangle vertex set
-            JavaPairRDD <Edge, int[]> invalids = tSet.filter(kv -> kv._2[0] < minSup).cache();
+            JavaPairRDD <Edge, int[]> invalids = tSet.filter(kv ->
+                    (kv._2[0] >= 0 && kv._2[0] < minSup) || (kv._2.length == 2))
+                    .cache();
+            long rCount = invalids.filter(kv -> kv._2.length == 2).count();
+            if(rCount > 0) {
+                System.out.println("recompute size: " + rCount);
+                tSet = reTSet(tSet, k, numPartitions, h);
+                invalids = tSet.filter(kv -> kv._2[0] >= 0 && kv._2[0] < minSup).cache();
+            } else {
+                invalids = invalids.filter(kv -> kv._2.length != 2).cache();
+            }
+
             long invalidCount = invalids.count();
 
             // If no invalid edge is found then the program terminates
@@ -108,8 +139,7 @@ public class KTruss {
             // The edges in the key part of invalids key-values should be removed. So, we detect other
             // edges of their involved triangle from their triangle vertex set. Here, we determine the
             // vertices which should be removed from the triangle vertex set related to the other edges.
-            JavaPairRDD <Edge, Iterable <Integer>> invUpdates = tSet
-                    .filter(kv -> kv._2[0] < minSup)
+            JavaPairRDD <Edge, Iterable <Integer>> invUpdates = invalids
                     .flatMapToPair(kv -> {
                         int i = META_LEN;
 
@@ -140,9 +170,9 @@ public class KTruss {
                     }).groupByKey(numPartitions);
 
             // Remove the invalid vertices from the triangle vertex set of each remaining (valid) edge.
-            tSet = tSet.filter(kv -> kv._2[0] >= minSup).leftOuterJoin(invUpdates)
+            tSet = tSet.filter(kv -> kv._2[0] < 0 || kv._2[0] >= minSup).leftOuterJoin(invUpdates)
                     .mapValues(values -> {
-                        org.apache.spark.api.java.Optional <Iterable <Integer>> invalidUpdate = values._2;
+                        Optional <Iterable <Integer>> invalidUpdate = values._2;
                         int[] set = values._1;
 
                         // If no invalid vertex is present for the current edge then return the set value.
@@ -153,6 +183,15 @@ public class KTruss {
                         IntSet iSet = new IntOpenHashSet();
                         for (int v : invalidUpdate.get()) {
                             iSet.add(v);
+                        }
+
+                        if (set[0] < 0) {
+                            int nSup = Math.max(0, Math.abs(set[0]) - iSet.size());
+                            if (nSup < minSup)
+                                return RE_COMP_VAL;
+
+                            set[0] = -nSup;
+                            return set;
                         }
 
                         for (int i = META_LEN; i < set.length; i++) {
