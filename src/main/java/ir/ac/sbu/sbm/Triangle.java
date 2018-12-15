@@ -19,7 +19,7 @@ public class Triangle {
 
     public static JavaPairRDD <Edge, int[]> createTSet(JavaPairRDD <Integer, int[]> neighbors, int pm) {
         JavaPairRDD <Integer, int[]> fonl = fonl(neighbors);
-        int numPartitions = fonl.getNumPartitions();
+        int numPartitions = fonl.getNumPartitions() * pm;
         JavaPairRDD <Integer, int[]> candidates = fonl.filter(t -> t._2.length > 2)
                 .flatMapToPair(t -> {
 
@@ -43,60 +43,61 @@ public class Triangle {
                     return output.iterator();
                 });
 
-        return fonl.cogroup(candidates, numPartitions * pm).mapPartitionsToPair(partitions -> {
-            Map <Edge, Tuple2 <IntList, ByteList>> map = new HashMap <>();
-            while (partitions.hasNext()) {
-                Tuple2 <Integer, Tuple2 <Iterable <int[]>, Iterable <int[]>>> t = partitions.next();
-                int[] fVal = t._2._1.iterator().next();
-                Arrays.sort(fVal, 1, fVal.length);
-                int v = t._1;
-                for (int[] cVal : t._2._2) {
-                    int u = cVal[0];
-                    Edge uv = new Edge(u, v);
+        return fonl.cogroup(candidates, numPartitions)
+                .mapPartitionsToPair(partitions -> {
+                    Map <Edge, Tuple2 <IntList, ByteList>> map = new HashMap <>();
+                    while (partitions.hasNext()) {
+                        Tuple2 <Integer, Tuple2 <Iterable <int[]>, Iterable <int[]>>> t = partitions.next();
+                        int[] fVal = t._2._1.iterator().next();
+                        Arrays.sort(fVal, 1, fVal.length);
+                        int v = t._1;
+                        for (int[] cVal : t._2._2) {
+                            int u = cVal[0];
+                            Edge uv = new Edge(u, v);
 
-                    // The intersection determines triangles which u and vertex are two of their vertices.
-                    // Always generate and edge (u, vertex) such that u < vertex.
-                    int fi = 1;
-                    int ci = 1;
-                    while (fi < fVal.length && ci < cVal.length) {
-                        if (fVal[fi] < cVal[ci])
-                            fi++;
-                        else if (fVal[fi] > cVal[ci])
-                            ci++;
-                        else {
-                            int w = fVal[fi];
-                            Edge uw = new Edge(u, w);
-                            Edge vw = new Edge(v, w);
-                            Tuple2 <IntList, ByteList> tuple;
+                            // The intersection determines triangles which u and vertex are two of their vertices.
+                            // Always generate and edge (u, vertex) such that u < vertex.
+                            int fi = 1;
+                            int ci = 1;
+                            while (fi < fVal.length && ci < cVal.length) {
+                                if (fVal[fi] < cVal[ci])
+                                    fi++;
+                                else if (fVal[fi] > cVal[ci])
+                                    ci++;
+                                else {
+                                    int w = fVal[fi];
+                                    Edge uw = new Edge(u, w);
+                                    Edge vw = new Edge(v, w);
+                                    Tuple2 <IntList, ByteList> tuple;
 
-                            tuple = map.computeIfAbsent(uv, k -> new Tuple2 <>(new IntArrayList(), new ByteArrayList()));
-                            tuple._1.add(w);
-                            tuple._2.add(W_SIGN);
+                                    tuple = map.computeIfAbsent(uv, k -> new Tuple2 <>(new IntArrayList(), new ByteArrayList()));
+                                    tuple._1.add(w);
+                                    tuple._2.add(W_SIGN);
 
-                            tuple = map.computeIfAbsent(uw, k -> new Tuple2 <>(new IntArrayList(), new ByteArrayList()));
-                            tuple._1.add(v);
-                            tuple._2.add(V_SIGN);
+                                    tuple = map.computeIfAbsent(uw, k -> new Tuple2 <>(new IntArrayList(), new ByteArrayList()));
+                                    tuple._1.add(v);
+                                    tuple._2.add(V_SIGN);
 
-                            tuple = map.computeIfAbsent(vw, k -> new Tuple2 <>(new IntArrayList(), new ByteArrayList()));
-                            tuple._1.add(u);
-                            tuple._2.add(U_SIGN);
+                                    tuple = map.computeIfAbsent(vw, k -> new Tuple2 <>(new IntArrayList(), new ByteArrayList()));
+                                    tuple._1.add(u);
+                                    tuple._2.add(U_SIGN);
 
-                            fi++;
-                            ci++;
+                                    fi++;
+                                    ci++;
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            Iterator <Tuple2 <Edge, Tuple2 <int[], byte[]>>> result = map.entrySet()
-                    .stream()
-                    .map(entry -> new Tuple2 <>(
-                            entry.getKey(),
-                            new Tuple2 <>(entry.getValue()._1.toIntArray(), entry.getValue()._2.toByteArray())))
-                    .iterator();
-            return result;
-        })
-                .groupByKey()
+                    Iterator <Tuple2 <Edge, Tuple2 <int[], byte[]>>> result = map.entrySet()
+                            .stream()
+                            .map(entry -> new Tuple2 <>(
+                                    entry.getKey(),
+                                    new Tuple2 <>(entry.getValue()._1.toIntArray(), entry.getValue()._2.toByteArray())))
+                            .iterator();
+                    return result;
+                })
+                .groupByKey(numPartitions)
                 .mapValues(values -> {
                     IntList wList = new IntArrayList();
                     IntList vList = new IntArrayList();
@@ -138,6 +139,7 @@ public class Triangle {
     }
 
     private static JavaPairRDD <Integer, int[]> fonl(JavaPairRDD <Integer, int[]> neighbors) {
+        int numPartitions = neighbors.getNumPartitions();
         return neighbors.flatMapToPair(t -> {
             int deg = t._2.length;
             if (deg == 0)
@@ -152,39 +154,40 @@ public class Triangle {
             }
 
             return degreeList.iterator();
-        }).groupByKey().mapToPair(v -> {
-            int degree = 0;
-            // Iterate over higherIds to calculate degree of the current vertex
-            if (v._2 == null)
-                return new Tuple2 <>(v._1, new int[]{0});
+        }).groupByKey(numPartitions)
+                .mapToPair(v -> {
+                    int degree = 0;
+                    // Iterate over higherIds to calculate degree of the current vertex
+                    if (v._2 == null)
+                        return new Tuple2 <>(v._1, new int[]{0});
 
-            for (VertexDeg vd : v._2) {
-                degree++;
-            }
+                    for (VertexDeg vd : v._2) {
+                        degree++;
+                    }
 
-            List <VertexDeg> list = new ArrayList <>();
-            for (VertexDeg vd : v._2)
-                if (vd.degree > degree || (vd.degree == degree && vd.vertex > v._1))
-                    list.add(vd);
+                    List <VertexDeg> list = new ArrayList <>();
+                    for (VertexDeg vd : v._2)
+                        if (vd.degree > degree || (vd.degree == degree && vd.vertex > v._1))
+                            list.add(vd);
 
-            Collections.sort(list, (a, b) -> {
-                int x, y;
-                if (a.degree != b.degree) {
-                    x = a.degree;
-                    y = b.degree;
-                } else {
-                    x = a.vertex;
-                    y = b.vertex;
-                }
-                return x - y;
-            });
+                    Collections.sort(list, (a, b) -> {
+                        int x, y;
+                        if (a.degree != b.degree) {
+                            x = a.degree;
+                            y = b.degree;
+                        } else {
+                            x = a.vertex;
+                            y = b.vertex;
+                        }
+                        return x - y;
+                    });
 
-            int[] higherDegs = new int[list.size() + 1];
-            higherDegs[0] = degree;
-            for (int i = 1; i < higherDegs.length; i++)
-                higherDegs[i] = list.get(i - 1).vertex;
+                    int[] higherDegs = new int[list.size() + 1];
+                    higherDegs[0] = degree;
+                    for (int i = 1; i < higherDegs.length; i++)
+                        higherDegs[i] = list.get(i - 1).vertex;
 
-            return new Tuple2 <>(v._1, higherDegs);
-        }).persist(StorageLevel.MEMORY_AND_DISK());
+                    return new Tuple2 <>(v._1, higherDegs);
+                }).persist(StorageLevel.MEMORY_AND_DISK());
     }
 }
