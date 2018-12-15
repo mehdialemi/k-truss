@@ -19,7 +19,7 @@ public class Triangle {
 
     public static JavaPairRDD <Edge, int[]> createTSet(JavaPairRDD <Integer, int[]> neighbors, int pm) {
         JavaPairRDD <Integer, int[]> fonl = fonl(neighbors);
-        int numPartitions = fonl.getNumPartitions() * pm;
+        final int numPartitions = fonl.getNumPartitions() * pm;
         JavaPairRDD <Integer, int[]> candidates = fonl.filter(t -> t._2.length > 2)
                 .flatMapToPair(t -> {
 
