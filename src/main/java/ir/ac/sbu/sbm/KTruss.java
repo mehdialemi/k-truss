@@ -25,7 +25,6 @@ public class KTruss {
         int k = argumentReader.nextInt(4);
         int cores = argumentReader.nextInt(2);
         int partitions = argumentReader.nextInt(4);
-        int pm = argumentReader.nextInt(5);
         int kCoreIteration = argumentReader.nextInt(1000);
 
         SparkConf sparkConf = new SparkConf();
@@ -41,26 +40,24 @@ public class KTruss {
         JavaSparkContext sc = new JavaSparkContext(sparkConf);
 
         System.out.println("Running k-truss with argument input: " + input + ", k: " + k +
-                ", cores: " + cores + ", partitions: " + partitions + ", pm: " + pm +
+                ", cores: " + cores + ", partitions: " + partitions +
                 ", kCoreIteration: " + kCoreIteration);
 
         long t1 = System.currentTimeMillis();
-        JavaPairRDD <Edge, int[]> subgraph = find(k, sc, input, partitions, kCoreIteration, pm);
+        JavaPairRDD <Edge, int[]> subgraph = find(k, sc, input, partitions, kCoreIteration);
         long t2 = System.currentTimeMillis();
         System.out.println("KTruss edge count: " + subgraph.count() + ", duration: " + (t2 - t1) + " ms");
     }
 
     public static JavaPairRDD <Edge, int[]> find(int k, JavaSparkContext sc, String input, int partitions,
-                                                 int kCoreIterations, int pm) {
+                                                 int kCoreIterations) {
         JavaPairRDD <Integer, Integer> edges = EdgeLoader.load(sc, input);
 
         JavaPairRDD <Integer, int[]> neighbors = EdgeLoader.createNeighbors(edges);
 
-        final int p = partitions * pm;
         JavaPairRDD <Integer, int[]> kCore = KCore.find(k - 1, neighbors, kCoreIterations)
-                .repartition(p).persist(StorageLevel.MEMORY_AND_DISK());
 
-        JavaPairRDD <Edge, int[]> tSet = Triangle.createTSet(kCore);
+        JavaPairRDD <Edge, int[]> tSet = Triangle.createTSet(kCore, partitions);
 
         return process(k - 2, tSet);
     }
