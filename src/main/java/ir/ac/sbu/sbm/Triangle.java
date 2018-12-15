@@ -96,7 +96,7 @@ public class Triangle {
                     .iterator();
             return result;
         })
-                .groupByKey(numPartitions)
+                .groupByKey()
                 .mapValues(values -> {
                     IntList wList = new IntArrayList();
                     IntList vList = new IntArrayList();
