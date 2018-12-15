@@ -119,11 +119,10 @@ public class KTruss {
 
             long count = invUpdates.count();
             long t2 = System.currentTimeMillis();
-            String msg = "iteration: " + iter + ", invalid edge count: " + count;
             long iterDuration = t2 - t1;
             kTrussDuration += iterDuration;
-            System.out.println(msg + ", duration: " + iterDuration + " ms");
-
+            System.out.println("iteration: " + iter + ", invalid edge count: " + count +
+                    ", duration: " + iterDuration + " ms");
 
             // Remove the invalid vertices from the triangle vertex set of each remaining (valid) edge.
             tSet = tSet.filter(kv -> kv._2[0] >= minSup).leftOuterJoin(invUpdates)
