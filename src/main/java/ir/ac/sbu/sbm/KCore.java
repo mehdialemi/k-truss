@@ -12,15 +12,26 @@ import java.util.List;
 
 public class KCore {
 
-    public static JavaPairRDD <Integer, int[]> find(final int k, JavaPairRDD <Integer, int[]> neighbors,
-                                                    int iterations) {
+    public static JavaPairRDD <Integer, int[]> find(int k, JavaPairRDD <Integer, int[]> neighbors, int iterations) {
+        long t = System.currentTimeMillis();
+        System.out.println("neighbors count: " + neighbors.count() + (System.currentTimeMillis() - t) + " ms");
+
         for (int iter = 0; iter < iterations; iter++) {
             long t1 = System.currentTimeMillis();
             if ((iter + 1) % 50 == 0)
                 neighbors.checkpoint();
 
-            JavaPairRDD <Integer, Iterable <Integer>> invUpdate = neighbors
-                    .filter(nl -> nl._2.length < k)
+            JavaPairRDD <Integer, int[]> invalids = neighbors.filter(nl -> nl._2.length < k).cache();
+            long count = invalids.count();
+            long t2 = System.currentTimeMillis();
+            long duration = t2 - t1;
+            System.out.println("K-core, invalids: " + count + ", duration: " + duration);
+
+            if (count == 0)
+                break;
+
+            iterations = iter + 1;
+            JavaPairRDD <Integer, Iterable <Integer>> invUpdate = invalids
                     .flatMapToPair(nl -> {
                         List <Tuple2 <Integer, Integer>> out = new ArrayList <>(nl._2.length);
 
@@ -29,15 +40,6 @@ public class KCore {
                         }
                         return out.iterator();
                     }).groupByKey();
-
-            long count = invUpdate.count();
-
-            if (count == 0)
-                break;
-
-            long t2 = System.currentTimeMillis();
-            long duration = t2 - t1;
-            System.out.println(" K-core) iteration: " + iter + ", invUpdate count: " + count + ", duration: " + duration);
 
             neighbors = neighbors.filter(nl -> nl._2.length >= k)
                     .leftOuterJoin(invUpdate)
@@ -60,7 +62,6 @@ public class KCore {
                         return nSet.toIntArray();
                     }).cache();
         }
-
         return neighbors;
     }
 }
