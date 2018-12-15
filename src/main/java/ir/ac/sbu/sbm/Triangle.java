@@ -146,6 +146,13 @@ public class Triangle {
                         int[] vertices = value._1;
                         byte[] signs = value._2;
                         for (int i = 0; i < vertices.length; i++) {
+                            if (sup > h) {
+                                if (signs[i] == H_SIGN)
+                                    sup += vertices[i];
+                                else
+                                    sup ++;
+                                continue;
+                            }
                             switch (signs[i]) {
                                 case W_SIGN:
                                     wList.add(vertices[i]);
