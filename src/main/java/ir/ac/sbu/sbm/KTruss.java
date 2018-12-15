@@ -8,6 +8,7 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.storage.StorageLevel;
 import scala.Tuple2;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class KTruss {
 
     public static void main(String[] args) {
         ArgumentReader argumentReader = new ArgumentReader(args);
-        String inputPath = argumentReader.nextString("/home/mehdi/graph-data/com-youtube.ungraph.txt");
+        String input = argumentReader.nextString("/home/mehdi/graph-data/com-youtube.ungraph.txt");
         int k = argumentReader.nextInt(4);
         int cores = argumentReader.nextInt(2);
         int partitions = argumentReader.nextInt(4);
@@ -28,23 +29,23 @@ public class KTruss {
         int kCoreIteration = argumentReader.nextInt(1000);
 
         SparkConf sparkConf = new SparkConf();
-        if (!inputPath.startsWith("hdfs")) {
+        if (!input.startsWith("hdfs")) {
             sparkConf.set("spark.driver.bindAddress", "localhost");
             sparkConf.setMaster("local[" + cores + "]");
         }
-        sparkConf.setAppName("KTruss");
+        sparkConf.setAppName("KTruss-" + new File(input).getName() + "-kc(" + kCoreIteration + ")");
         sparkConf.set("spark.driver.memory", "10g");
         sparkConf.set("spark.driver.maxResultSize", "9g");
         sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
         sparkConf.registerKryoClasses(new Class[] {int[].class, byte[].class, VertexDeg.class, Edge.class});
         JavaSparkContext sc = new JavaSparkContext(sparkConf);
 
-        System.out.println("Running k-truss with argument input: " + inputPath + ", k: " + k +
+        System.out.println("Running k-truss with argument input: " + input + ", k: " + k +
                 ", cores: " + cores + ", partitions: " + partitions + ", pm: " + pm +
                 ", kCoreIteration: " + kCoreIteration);
 
         long t1 = System.currentTimeMillis();
-        JavaPairRDD <Edge, int[]> subgraph = find(k, sc, inputPath, partitions, kCoreIteration, pm);
+        JavaPairRDD <Edge, int[]> subgraph = find(k, sc, input, partitions, kCoreIteration, pm);
         long t2 = System.currentTimeMillis();
         System.out.println("KTruss edge count: " + subgraph.count() + ", duration: " + (t2 - t1) + " ms");
     }
