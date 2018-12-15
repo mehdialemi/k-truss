@@ -114,7 +114,7 @@ public class KTruss {
                         }
 
                         return out.iterator();
-                    }).groupByKey(numPartitions);
+                    }).groupByKey(numPartitions).cache();
 
             long count = invUpdates.count();
 
@@ -127,7 +127,8 @@ public class KTruss {
                     ", duration: " + iterDuration + " ms");
 
             // Remove the invalid vertices from the triangle vertex set of each remaining (valid) edge.
-            tSet = tSet.filter(kv -> kv._2[0] >= minSup).leftOuterJoin(invUpdates)
+            tSet = tSet.filter(kv -> kv._2[0] >= minSup)
+                    .leftOuterJoin(invUpdates)
                     .mapValues(values -> {
                         org.apache.spark.api.java.Optional <Iterable <Integer>> invalidUpdate = values._2;
                         int[] set = values._1;
