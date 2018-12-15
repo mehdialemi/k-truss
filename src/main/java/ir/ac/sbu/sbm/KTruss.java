@@ -54,7 +54,7 @@ public class KTruss {
                                                  int kCoreIterations, int pm) {
         JavaPairRDD <Integer, Integer> edges = EdgeLoader.load(sc, input, partitions);
 
-        JavaPairRDD <Integer, int[]> neighbors = EdgeLoader.createNeighbors(edges);
+        JavaPairRDD <Integer, int[]> neighbors = EdgeLoader.createNeighbors(edges).cache();
 
         JavaPairRDD <Integer, int[]> kCore = KCore.find(k - 1, neighbors, kCoreIterations);
 
