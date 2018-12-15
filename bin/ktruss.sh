@@ -19,7 +19,7 @@ ktruss  soc-liveJournal 80 99
 ktruss  soc-liveJournal 160 99
 ktruss  soc-liveJournal 362 99
 ktruss  orkut   4   530
-ktruss  orkut   40   530
+ktruss  orkut   39   530
 ktruss  orkut   78   530
 ktruss  friendster  4   1476
 ktruss  friendster  39   1476
