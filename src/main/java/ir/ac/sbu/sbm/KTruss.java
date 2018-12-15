@@ -92,9 +92,9 @@ public class KTruss {
 
             invalidsCount += invalidCount;
 
-            if (tSetQueue.size() > 1)
+            if (tSetQueue.size() > 2)
                 tSetQueue.remove().unpersist();
-            if (invQueue.size() > 1)
+            if (invQueue.size() > 2)
                 invQueue.remove().unpersist();
 
             invQueue.add(invalids);
