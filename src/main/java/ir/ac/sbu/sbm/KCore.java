@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.storage.StorageLevel;
 import scala.Tuple2;
 
 import java.util.ArrayList;
@@ -12,7 +13,9 @@ import java.util.List;
 
 public class KCore {
 
-    public static JavaPairRDD <Integer, int[]> find(int k, JavaPairRDD <Integer, int[]> neighbors, int iterations) {
+    public static JavaPairRDD <Integer, int[]> find(final int k, JavaPairRDD <Integer, int[]> neighbors,
+                                                    int iterations) {
+        int numPartitions = neighbors.getNumPartitions();
 
         for (int iter = 0; iter < iterations; iter++) {
             long t1 = System.currentTimeMillis();
@@ -37,7 +40,7 @@ public class KCore {
                             out.add(new Tuple2 <>(v, nl._1));
                         }
                         return out.iterator();
-                    }).groupByKey();
+                    }).groupByKey(numPartitions);
 
             neighbors = neighbors.filter(nl -> nl._2.length >= k)
                     .leftOuterJoin(invUpdate)
@@ -60,6 +63,6 @@ public class KCore {
                         return nSet.toIntArray();
                     }).cache();
         }
-        return neighbors;
+        return neighbors.repartition(numPartitions).persist(StorageLevel.MEMORY_AND_DISK());
     }
 }

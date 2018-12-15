@@ -43,6 +43,6 @@ public class EdgeLoader {
                 set.add(v.intValue());
             }
             return new Tuple2<>(t._1, set.toIntArray());
-        });
+        }).cache();
     }
 }

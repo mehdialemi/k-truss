@@ -54,7 +54,7 @@ public class KTruss {
                                                  int kCoreIterations, int pm) {
         JavaPairRDD <Integer, Integer> edges = EdgeLoader.load(sc, input, partitions);
 
-        JavaPairRDD <Integer, int[]> neighbors = EdgeLoader.createNeighbors(edges).cache();
+        JavaPairRDD <Integer, int[]> neighbors = EdgeLoader.createNeighbors(edges);
 
         JavaPairRDD <Integer, int[]> kCore = KCore.find(k - 1, neighbors, kCoreIterations);
 
@@ -73,9 +73,10 @@ public class KTruss {
         int invalidsCount = 0;
         int iter = 0;
         while (true) {
+            iter ++;
             long t1 = System.currentTimeMillis();
 
-            if ((iter + 1) % CHECKPOINT_ITERATION == 0) {
+            if (iter % CHECKPOINT_ITERATION == 0) {
                 tSet.checkpoint();
             }
 
@@ -98,7 +99,7 @@ public class KTruss {
             invQueue.add(invalids);
 
             long t2 = System.currentTimeMillis();
-            String msg = "iteration: " + (iter + 1) + ", invalid edge count: " + invalidCount;
+            String msg = "iteration: " + iter + ", invalid edge count: " + invalidCount;
             long iterDuration = t2 - t1;
             kTrussDuration += iterDuration;
             System.out.println(msg + ", duration: " + iterDuration + " ms");
