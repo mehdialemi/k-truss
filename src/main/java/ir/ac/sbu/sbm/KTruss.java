@@ -33,7 +33,7 @@ public class KTruss {
             sparkConf.set("spark.driver.bindAddress", "localhost");
             sparkConf.setMaster("local[" + cores + "]");
         }
-        sparkConf.setAppName("KTruss-" + new File(input).getName() + "-kc(" + kCoreIteration + ")");
+        sparkConf.setAppName("KTruss-" + k + "-" + new File(input).getName() + "-kc(" + kCoreIteration + ")");
         sparkConf.set("spark.driver.memory", "10g");
         sparkConf.set("spark.driver.maxResultSize", "9g");
         sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
