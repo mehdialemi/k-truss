@@ -26,7 +26,7 @@ public class KTruss {
         ArgumentReader argumentReader = new ArgumentReader(args);
         String input = argumentReader.nextString("/home/mehdi/graph-data/com-youtube.ungraph.txt");
         int k = argumentReader.nextInt(4);
-        int h = k + argumentReader.nextInt(3);
+        int h = argumentReader.nextInt(3);
         int cores = argumentReader.nextInt(2);
         int partitions = argumentReader.nextInt(4);
         int kCoreIteration = argumentReader.nextInt(1000);
