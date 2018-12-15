@@ -12,9 +12,9 @@ import java.util.List;
 
 public class EdgeLoader {
 
-    public static JavaPairRDD<Integer, Integer> load(JavaSparkContext sc, String input, int partitions) {
+    public static JavaPairRDD<Integer, Integer> load(JavaSparkContext sc, String input) {
         return sc
-                .textFile(input, partitions)
+                .textFile(input)
                 .flatMapToPair(line -> {
                     if (line.startsWith("#"))
                         return Collections.emptyIterator();

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a2beea7d-c8f5-4c3e-a25e-d337339fdce2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KCore.java" afterDir="false" />
-    </list>
+    <list default="true" id="a2beea7d-c8f5-4c3e-a25e-d337339fdce2" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,7 +37,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="1438" />
+          <entry key="java" value="1491" />
           <entry key="sh" value="404" />
           <entry key="xml" value="105" />
         </counts>
@@ -47,7 +45,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Bash" value="404" />
-          <entry key="JAVA" value="1438" />
+          <entry key="JAVA" value="1491" />
           <entry key="XML" value="105" />
         </counts>
       </usages-collector>
@@ -58,8 +56,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="183">
-              <caret line="58" column="53" selection-start-line="58" selection-start-column="53" selection-end-line="58" selection-end-column="53" />
+            <state relative-caret-position="243">
+              <caret line="62" column="54" lean-forward="true" selection-start-line="62" selection-start-column="54" selection-end-line="62" selection-end-column="54" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -127,11 +125,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="296">
-              <caret line="141" column="22" selection-start-line="141" selection-start-column="22" selection-end-line="141" selection-end-column="22" />
+            <state relative-caret-position="153">
+              <caret line="21" column="44" selection-start-line="21" selection-start-column="44" selection-end-line="21" selection-end-column="44" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -148,11 +146,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KCore.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="16" column="86" selection-start-line="16" selection-start-column="86" selection-end-line="16" selection-end-column="86" />
+            <state relative-caret-position="78">
+              <caret line="16" column="66" selection-start-line="16" selection-start-column="66" selection-end-line="16" selection-end-column="66" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -184,8 +182,8 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java" />
         <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KCore.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java" />
       </list>
     </option>
   </component>
@@ -246,7 +244,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="add_unversioned_files" value="true" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544890389810" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544890624767" />
     <property name="last_opened_file_path" value="$USER_HOME$/Software/node-v8.12.0-linux-x64/bin/node" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -299,12 +297,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1544880792049</updated>
-      <workItem from="1544880794462" duration="9476000" />
+      <workItem from="1544880794462" duration="9718000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9476000" />
+    <option name="totallyTimeSpent" value="9718000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="-4" width="1299" height="772" extended-state="6" />
@@ -419,10 +417,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KCore.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="141" column="22" selection-start-line="141" selection-start-column="22" selection-end-line="141" selection-end-column="22" />
+        <state relative-caret-position="78">
+          <caret line="16" column="66" selection-start-line="16" selection-start-column="66" selection-end-line="16" selection-end-column="66" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -431,18 +429,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="58" column="53" selection-start-line="58" selection-start-column="53" selection-end-line="58" selection-end-column="53" />
+        <state relative-caret-position="243">
+          <caret line="62" column="54" lean-forward="true" selection-start-line="62" selection-start-column="54" selection-end-line="62" selection-end-column="54" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KCore.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="16" column="86" selection-start-line="16" selection-start-column="86" selection-end-line="16" selection-end-column="86" />
+        <state relative-caret-position="153">
+          <caret line="21" column="44" selection-start-line="21" selection-start-column="44" selection-end-line="21" selection-end-column="44" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

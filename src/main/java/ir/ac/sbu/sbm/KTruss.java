@@ -52,7 +52,7 @@ public class KTruss {
 
     public static JavaPairRDD <Edge, int[]> find(int k, JavaSparkContext sc, String input, int partitions,
                                                  int kCoreIterations, int pm) {
-        JavaPairRDD <Integer, Integer> edges = EdgeLoader.load(sc, input, partitions);
+        JavaPairRDD <Integer, Integer> edges = EdgeLoader.load(sc, input);
 
         JavaPairRDD <Integer, int[]> neighbors = EdgeLoader.createNeighbors(edges);
 
