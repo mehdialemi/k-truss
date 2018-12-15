@@ -108,6 +108,7 @@ public class KTruss {
             long rCount = invalids.filter(kv -> kv._2.length == 2).count();
             if(rCount > 0) {
                 System.out.println("recompute size: " + rCount);
+                h += h;
                 tSet = reTSet(tSet, k, numPartitions, h);
                 invalids = tSet.filter(kv -> kv._2[0] >= 0 && kv._2[0] < minSup).cache();
             } else {
