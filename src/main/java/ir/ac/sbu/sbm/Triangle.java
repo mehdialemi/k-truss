@@ -17,7 +17,7 @@ public class Triangle {
     public static final byte V_SIGN = (byte) 1;
     public static final byte U_SIGN = (byte) 2;
 
-    public static JavaPairRDD <Edge, int[]> createTSet(JavaPairRDD <Integer, int[]> neighbors) {
+    public static JavaPairRDD <Edge, int[]> createTSet(JavaPairRDD <Integer, int[]> neighbors, int numPartitions) {
         JavaPairRDD <Integer, int[]> fonl = fonl(neighbors);
         System.out.println("fonl count: " + fonl.count());
 
@@ -44,7 +44,7 @@ public class Triangle {
                     return output.iterator();
                 });
 
-        return fonl.cogroup(candidates)
+        return fonl.cogroup(candidates, numPartitions)
                 .mapPartitionsToPair(partitions -> {
                     Map <Edge, Tuple2 <IntList, ByteList>> map = new HashMap <>();
                     while (partitions.hasNext()) {

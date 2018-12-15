@@ -55,11 +55,9 @@ public class KTruss {
 
         JavaPairRDD <Integer, int[]> neighbors = EdgeLoader.createNeighbors(edges);
 
-        JavaPairRDD <Integer, int[]> kCore = KCore.find(k - 1, neighbors, kCoreIterations)
-                .repartition(partitions)
-                .cache();
+        JavaPairRDD <Integer, int[]> kCore = KCore.find(k - 1, neighbors, kCoreIterations);
 
-        JavaPairRDD <Edge, int[]> tSet = Triangle.createTSet(kCore);
+        JavaPairRDD <Edge, int[]> tSet = Triangle.createTSet(kCore, partitions);
 
         return process(k - 2, tSet);
     }
