@@ -26,7 +26,7 @@ public class KTruss {
         ArgumentReader argumentReader = new ArgumentReader(args);
         String input = argumentReader.nextString("/home/mehdi/graph-data/com-youtube.ungraph.txt");
         int k = argumentReader.nextInt(4);
-        int plus = argumentReader.nextInt(3);
+        int kPlus = argumentReader.nextInt(3);
         int cores = argumentReader.nextInt(2);
         int partitions = argumentReader.nextInt(4);
         int kCoreIteration = argumentReader.nextInt(1000);
@@ -48,7 +48,7 @@ public class KTruss {
                 ", kCoreIteration: " + kCoreIteration);
 
         long t1 = System.currentTimeMillis();
-        JavaPairRDD <Edge, int[]> subgraph = find(k, k + plus, sc, input, partitions, kCoreIteration);
+        JavaPairRDD <Edge, int[]> subgraph = find(k, k + kPlus, sc, input, partitions, kCoreIteration);
         long t2 = System.currentTimeMillis();
         System.out.println("KTruss edge count: " + subgraph.count() + ", duration: " + (t2 - t1) + " ms");
     }
