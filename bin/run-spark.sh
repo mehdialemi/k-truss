@@ -2,9 +2,10 @@
 
 class=$1
 cores=$2
+
 master=spark://alemi-1:7077
 jar="$PWD/target/subgraph-mining-1.0-jar-with-dependencies.jar"
-input="hdfs://${config[master]}/graph-data/$3"
+input="hdfs://alemi-1/graph-data/$3"
 k=$4
 partitions=$5
 pm=$6

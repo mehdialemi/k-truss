@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-CONF_FILE="$PWD/bin/ktruss.conf"
-
 function ktruss {
     input=$1
     k=$2
