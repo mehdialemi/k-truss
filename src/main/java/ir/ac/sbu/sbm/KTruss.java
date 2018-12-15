@@ -61,10 +61,7 @@ public class KTruss {
 
         JavaPairRDD <Integer, int[]> kCore = KCore.find(k - 1, neighbors, kCoreIterations);
 
-        long t1 = System.currentTimeMillis();
         JavaPairRDD <Edge, int[]> tSet = Triangle.createTSet(kCore, partitions, h);
-        System.out.println("tSet count: " + tSet.count() + ", time: " + (System.currentTimeMillis() - t1) + " ms");
-
         return process(k, tSet, h);
     }
 
@@ -77,10 +74,7 @@ public class KTruss {
         });
         JavaPairRDD <Integer, int[]> neighbors = EdgeLoader.createNeighbors(edges);
         JavaPairRDD <Integer, int[]> kCore = KCore.find(k - 1, neighbors, 1);
-        long t1 = System.currentTimeMillis();
-        JavaPairRDD <Edge, int[]> tSet2 = Triangle.createTSet(kCore, partitions, h);
-        System.out.println("tSet count: " + tSet2.count() + ", time: " + (System.currentTimeMillis() - t1) + " ms");
-        return tSet2;
+        return Triangle.createTSet(kCore, partitions, h);
     }
 
     private static JavaPairRDD <Edge, int[]> process(final int k, JavaPairRDD <Edge, int[]> tSet, int h) {

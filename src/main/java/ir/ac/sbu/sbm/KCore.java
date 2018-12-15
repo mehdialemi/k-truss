@@ -13,8 +13,6 @@ import java.util.List;
 public class KCore {
 
     public static JavaPairRDD <Integer, int[]> find(int k, JavaPairRDD <Integer, int[]> neighbors, int iterations) {
-        long t = System.currentTimeMillis();
-        System.out.println("neighbors count: " + neighbors.count() + (System.currentTimeMillis() - t) + " ms");
 
         for (int iter = 0; iter < iterations; iter++) {
             long t1 = System.currentTimeMillis();
