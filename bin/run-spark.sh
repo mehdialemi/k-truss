@@ -7,10 +7,11 @@ jar="$PWD/target/subgraph-mining-1.0-jar-with-dependencies.jar"
 input=$3
 k=$4
 partitions=$5
-kCoreIterations=$6
+pm=$6
+kCoreIterations=$7
 
 file_name=`date +%Y-%m-%d.%H.%M.%S`
 log_file="$logs/$class/$input/$file_name.log"
 
-$SPARK_HOME/bin/spark-submit --class $class --total-executor-cores $cores --master $master $jar $input $k $cores $partitions $kCoreIterations
+$SPARK_HOME/bin/spark-submit --class $class --total-executor-cores $cores --master $master $jar $input $k $cores $partitions $pm $kCoreIterations
 echo "Duration = $SECONDS"

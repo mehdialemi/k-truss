@@ -3,10 +3,12 @@
 CONF_FILE="$PWD/bin/ktruss.conf"
 
 function ktruss {
-    k=$1
-    p=$2
-    bin/run-spark.sh "ir.ac.sbu.graph.spark.ktruss.KTrussTSet" $CONF_FILE 120 $p 5 $k 1000
-    bin/run-spark.sh "ir.ac.sbu.graph.spark.ktruss.KTrussTSet" $CONF_FILE 120 $p 0 $k 1000
+    input=$1
+    k=$2
+    p=$3
+    pm=$4
+    bin/run-spark.sh "ir.ac.sbu.graph.spark.ktruss.KTrussTSet" 120 $input $k $p $pm 1000
+    bin/run-spark.sh "ir.ac.sbu.graph.spark.ktruss.KTrussTSet" 120 $input $k $p $pm 0
 }
 echo "youtube" > bin/inputs
 ktruss  4   20
