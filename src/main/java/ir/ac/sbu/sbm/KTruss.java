@@ -118,6 +118,10 @@ public class KTruss {
                     }).groupByKey(numPartitions);
 
             long count = invUpdates.count();
+
+            if (count == 0)
+                break;
+
             long t2 = System.currentTimeMillis();
             long iterDuration = t2 - t1;
             kTrussDuration += iterDuration;
@@ -158,7 +162,6 @@ public class KTruss {
             tSetQueue.add(tSet);
         }
 
-        System.out.println("kTruss duration: " + kTrussDuration + " ms, invalids: " + invalidsCount);
         return tSet;
     }
 }
