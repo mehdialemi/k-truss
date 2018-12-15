@@ -25,3 +25,7 @@
 hs_err_pid*
 
 */target/*
+/target/generated-sources/
+/target/classes/
+/target/classes.timestamp
+/target/
