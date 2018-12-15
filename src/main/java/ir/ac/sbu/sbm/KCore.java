@@ -14,8 +14,8 @@ import java.util.List;
 public class KCore {
 
     public static JavaPairRDD <Integer, int[]> find(final int k, JavaPairRDD <Integer, int[]> neighbors,
-                                                    int iterations) {
-        int numPartitions = neighbors.getNumPartitions();
+                                                    int iterations, int pm) {
+        int numPartitions = neighbors.getNumPartitions() * pm;
 
         for (int iter = 0; iter < iterations; iter++) {
             long t1 = System.currentTimeMillis();
@@ -62,6 +62,9 @@ public class KCore {
                         return nSet.toIntArray();
                     }).cache();
         }
-        return neighbors.repartition(numPartitions).persist(StorageLevel.MEMORY_AND_DISK());
+
+        return neighbors
+                .repartition(numPartitions)
+                .persist(StorageLevel.MEMORY_AND_DISK());
     }
 }
