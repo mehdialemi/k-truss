@@ -68,7 +68,10 @@ public class KTruss {
         int numPartitions = tSet.getNumPartitions();
 
         Queue <JavaPairRDD <Edge, int[]>> tSetQueue = new LinkedList <>();
+        Queue <JavaPairRDD <Edge, int[]>> invQueue = new LinkedList <>();
         tSetQueue.add(tSet);
+        long kTrussDuration = 0;
+        int invalidsCount = 0;
         int iter = 0;
         while (true) {
             iter++;
@@ -79,8 +82,28 @@ public class KTruss {
             }
 
             // Detect invalid edges by comparing the support of triangle vertex set
+            JavaPairRDD <Edge, int[]> invalids = tSet.filter(kv -> kv._2[0] < minSup).cache();
+            long invalidCount = invalids.count();
+
+            // If no invalid edge is found then the program terminates
+            if (invalidCount == 0) {
+                break;
+            }
+
+            invalidsCount += invalidCount;
+
             if (tSetQueue.size() > 1)
                 tSetQueue.remove().unpersist();
+            if (invQueue.size() > 1)
+                invQueue.remove().unpersist();
+
+            invQueue.add(invalids);
+
+            long t2 = System.currentTimeMillis();
+            String msg = "iteration: " + iter + ", invalid edge count: " + invalidCount;
+            long iterDuration = t2 - t1;
+            kTrussDuration += iterDuration;
+            System.out.println(msg + ", duration: " + iterDuration + " ms");
 
             // The edges in the key part of invalids key-values should be removed. So, we detect other
             // edges of their involved triangle from their triangle vertex set. Here, we determine the
@@ -114,21 +137,10 @@ public class KTruss {
                         }
 
                         return out.iterator();
-                    }).groupByKey(numPartitions).cache();
-
-            long count = invUpdates.count();
-
-            if (count == 0)
-                break;
-
-            long t2 = System.currentTimeMillis();
-            long iterDuration = t2 - t1;
-            System.out.println("iteration: " + iter + ", invalid edge count: " + count +
-                    ", duration: " + iterDuration + " ms");
+                    }).groupByKey(numPartitions);
 
             // Remove the invalid vertices from the triangle vertex set of each remaining (valid) edge.
-            tSet = tSet.filter(kv -> kv._2[0] >= minSup)
-                    .leftOuterJoin(invUpdates)
+            tSet = tSet.filter(kv -> kv._2[0] >= minSup).leftOuterJoin(invUpdates)
                     .mapValues(values -> {
                         org.apache.spark.api.java.Optional <Iterable <Integer>> invalidUpdate = values._2;
                         int[] set = values._1;
@@ -161,6 +173,7 @@ public class KTruss {
             tSetQueue.add(tSet);
         }
 
+        System.out.println("kTruss duration: " + kTrussDuration + " ms, invalids: " + invalidsCount);
         return tSet;
     }
 }
