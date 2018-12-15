@@ -8,11 +8,10 @@ jar="$PWD/target/k-truss-1.0-jar-with-dependencies.jar"
 input="hdfs://alemi-1/graph-data/$3"
 k=$4
 partitions=$5
-pm=$6
-kCoreIterations=$7
+kCoreIterations=$6
 
 file_name=`date +%Y-%m-%d.%H.%M.%S`
 log_file="$logs/$class/$input/$file_name.log"
 
-$SPARK_HOME/bin/spark-submit --class $class --total-executor-cores $cores --master $master $jar $input $k $cores $partitions $pm $kCoreIterations
+$SPARK_HOME/bin/spark-submit --class $class --total-executor-cores $cores --master $master $jar $input $k $cores $partitions $kCoreIterations
 echo "Duration = $SECONDS"
