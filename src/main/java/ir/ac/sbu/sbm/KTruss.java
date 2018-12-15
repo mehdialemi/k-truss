@@ -123,7 +123,6 @@ public class KTruss {
 
             long t2 = System.currentTimeMillis();
             long iterDuration = t2 - t1;
-            kTrussDuration += iterDuration;
             System.out.println("iteration: " + iter + ", invalid edge count: " + count +
                     ", duration: " + iterDuration + " ms");
 
