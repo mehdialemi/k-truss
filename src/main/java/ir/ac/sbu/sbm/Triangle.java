@@ -152,7 +152,7 @@ public class Triangle {
             }
 
             return degreeList.iterator();
-        }).groupByKey(numPartitions)
+        }).groupByKey()
                 .mapToPair(v -> {
                     int degree = 0;
                     // Iterate over higherIds to calculate degree of the current vertex
@@ -186,6 +186,8 @@ public class Triangle {
                         higherDegs[i] = list.get(i - 1).vertex;
 
                     return new Tuple2 <>(v._1, higherDegs);
-                }).persist(StorageLevel.MEMORY_AND_DISK());
+                })
+                .repartition(numPartitions)
+                .persist(StorageLevel.MEMORY_AND_DISK());
     }
 }
