@@ -7,8 +7,8 @@ function ktruss {
     k=$2
     p=$3
     pm=$4
-    bin/run-spark.sh "ir.ac.sbu.graph.spark.ktruss.KTrussTSet" 120 $input $k $p $pm 1000
-    bin/run-spark.sh "ir.ac.sbu.graph.spark.ktruss.KTrussTSet" 120 $input $k $p $pm 0
+    bin/run-spark.sh "ir.ac.sbu.sbm.KTruss" 120 $input $k $p $pm 1000
+    bin/run-spark.sh "ir.ac.sbu.sbm.KTruss" 120 $input $k $p $pm 0
 }
 
 ktruss  youtube 4   20  2
