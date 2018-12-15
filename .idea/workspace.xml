@@ -1,24 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a2beea7d-c8f5-4c3e-a25e-d337339fdce2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/deploy.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/ktruss.conf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/ktruss.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/run-spark.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/ArgumentReader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Edge.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/EdgeLoader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KCore.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/VertexDeg.java" afterDir="false" />
-    </list>
+    <list default="true" id="a2beea7d-c8f5-4c3e-a25e-d337339fdce2" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -54,15 +37,15 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="930" />
-          <entry key="sh" value="207" />
+          <entry key="java" value="1167" />
+          <entry key="sh" value="255" />
           <entry key="xml" value="84" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Bash" value="207" />
-          <entry key="JAVA" value="930" />
+          <entry key="Bash" value="255" />
+          <entry key="JAVA" value="1167" />
           <entry key="XML" value="84" />
         </counts>
       </usages-collector>
@@ -73,8 +56,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-195">
-              <caret line="14" selection-start-line="14" selection-end-line="14" />
+            <state relative-caret-position="-237">
+              <caret line="25" column="22" selection-start-line="25" selection-start-column="22" selection-end-line="25" selection-end-column="22" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -102,8 +85,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/run-spark.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="26" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
+            <state relative-caret-position="150">
+              <caret line="10" selection-start-line="10" selection-end-line="10" />
             </state>
           </provider>
         </entry>
@@ -111,8 +94,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/ktruss.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="90" selection-start-line="8" selection-start-column="90" selection-end-line="8" selection-end-column="90" />
+            <state relative-caret-position="150">
+              <caret line="10" column="85" selection-start-line="10" selection-start-column="85" selection-end-line="10" selection-end-column="85" />
             </state>
           </provider>
         </entry>
@@ -134,8 +117,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="10">
-              <caret line="14" column="4" selection-start-line="14" selection-start-column="4" selection-end-line="17" selection-end-column="47" />
+            <state relative-caret-position="1455">
+              <caret line="97" column="10" lean-forward="true" selection-start-line="97" selection-start-column="10" selection-end-line="97" selection-end-column="10" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -182,9 +165,9 @@
         <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KCore.java" />
         <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/VertexDeg.java" />
         <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/ArgumentReader.java" />
-        <option value="$PROJECT_DIR$/bin/ktruss.sh" />
-        <option value="$PROJECT_DIR$/bin/run-spark.sh" />
         <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java" />
+        <option value="$PROJECT_DIR$/bin/run-spark.sh" />
+        <option value="$PROJECT_DIR$/bin/ktruss.sh" />
         <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java" />
       </list>
     </option>
@@ -222,6 +205,11 @@
             <path>
               <item name="k-truss" type="b2602c69:ProjectViewProjectNode" />
               <item name="k-truss" type="462c0819:PsiDirectoryNode" />
+              <item name="bin" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="k-truss" type="b2602c69:ProjectViewProjectNode" />
+              <item name="k-truss" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -255,7 +243,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="add_unversioned_files" value="true" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544884456746" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544885182070" />
     <property name="last_opened_file_path" value="$USER_HOME$/Software/node-v8.12.0-linux-x64/bin/node" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -308,16 +296,15 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1544880792049</updated>
-      <workItem from="1544880794462" duration="3650000" />
+      <workItem from="1544880794462" duration="4312000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3650000" />
+    <option name="totallyTimeSpent" value="4312000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="-4" width="1299" height="772" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Designer" />
       <window_info id="Image Layers" />
@@ -326,7 +313,7 @@
       <window_info id="Capture Tool" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24940048" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" />
+      <window_info active="true" anchor="bottom" id="Terminal" visible="true" weight="0.3286385" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Java Enterprise" />
       <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
@@ -334,7 +321,7 @@
       <window_info anchor="bottom" id="Messages" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3286385" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3286385" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -417,34 +404,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/ktruss.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="90" selection-start-line="8" selection-start-column="90" selection-end-line="8" selection-end-column="90" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/run-spark.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="26" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="10">
-          <caret line="14" column="4" selection-start-line="14" selection-start-column="4" selection-end-line="17" selection-end-column="47" />
+        <state relative-caret-position="1455">
+          <caret line="97" column="10" lean-forward="true" selection-start-line="97" selection-start-column="10" selection-end-line="97" selection-end-column="10" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bin/run-spark.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/ktruss.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="85" selection-start-line="10" selection-start-column="85" selection-end-line="10" selection-end-column="85" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-195">
-          <caret line="14" selection-start-line="14" selection-end-line="14" />
+        <state relative-caret-position="-237">
+          <caret line="25" column="22" selection-start-line="25" selection-start-column="22" selection-end-line="25" selection-end-column="22" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

@@ -10,33 +10,22 @@ function ktruss {
     bin/run-spark.sh "ir.ac.sbu.graph.spark.ktruss.KTrussTSet" 120 $input $k $p $pm 1000
     bin/run-spark.sh "ir.ac.sbu.graph.spark.ktruss.KTrussTSet" 120 $input $k $p $pm 0
 }
-echo "youtube" > bin/inputs
-ktruss  4   20
-ktruss  19  20
-##
-echo "cit-patents" > bin/inputs
-ktruss  4   34
-ktruss  36  34
-##
-echo "soc-liveJournal" > bin/inputs
-ktruss  4 100
-ktruss  40 100
-ktruss  80 100
-ktruss  160 100
-ktruss  362 100
-##
-echo "orkut" > bin/inputs
-ktruss  4   159
-ktruss  40  159
-ktruss 78  159
-##
-echo "friendster" > bin/inputs
-ktruss  4   492
-ktruss  39   492
 
-echo "twitter" > bin/inputs
-ktruss  1998    1157
-ktruss  4   1157
-ktruss  40  1157
-ktruss  80  1157
-ktruss  160 1157
+ktruss  youtube 4   20  2
+ktruss  youtube 19  20  2
+ktruss  cit-patents 4   34  2
+ktruss  cit-patents 36   34  2
+ktruss  soc-liveJournal 4 100   3
+ktruss  soc-liveJournal 40 100   3
+ktruss  soc-liveJournal 80 100   3
+ktruss  soc-liveJournal 160 100   3
+ktruss  soc-liveJournal 362 100   3
+ktruss  orkut   4   160 3
+ktruss  orkut   40   160 3
+ktruss  orkut   78   160 3
+ktruss  friendster  4   492     3
+ktruss  friendster  39   492    3
+ktruss  twitter 1998    1157    6
+ktruss  twitter 4    1157   6
+ktruss  twitter 40    1157  6
+ktruss  twitter 80    1157  6
