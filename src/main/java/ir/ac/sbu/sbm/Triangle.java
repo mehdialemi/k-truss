@@ -17,8 +17,8 @@ public class Triangle {
     public static final byte V_SIGN = (byte) 1;
     public static final byte U_SIGN = (byte) 2;
 
-    public static JavaPairRDD <Edge, int[]> createTSet(JavaPairRDD <Integer, int[]> neighbors, int numPartitions) {
-        JavaPairRDD <Integer, int[]> fonl = fonl(neighbors, numPartitions);
+    public static JavaPairRDD <Edge, int[]> createTSet(JavaPairRDD <Integer, int[]> neighbors) {
+        JavaPairRDD <Integer, int[]> fonl = fonl(neighbors);
         JavaPairRDD <Integer, int[]> candidates = fonl.filter(t -> t._2.length > 2)
                 .flatMapToPair(t -> {
 
@@ -42,7 +42,7 @@ public class Triangle {
                     return output.iterator();
                 });
 
-        return fonl.cogroup(candidates, numPartitions)
+        return fonl.cogroup(candidates)
                 .mapPartitionsToPair(partitions -> {
                     Map <Edge, Tuple2 <IntList, ByteList>> map = new HashMap <>();
                     while (partitions.hasNext()) {
@@ -96,7 +96,7 @@ public class Triangle {
                             .iterator();
                     return result;
                 })
-                .groupByKey(numPartitions)
+                .groupByKey()
                 .mapValues(values -> {
                     IntList wList = new IntArrayList();
                     IntList vList = new IntArrayList();
@@ -137,7 +137,7 @@ public class Triangle {
                 }).persist(StorageLevel.MEMORY_AND_DISK());
     }
 
-    private static JavaPairRDD <Integer, int[]> fonl(JavaPairRDD <Integer, int[]> neighbors, int numPartitions) {
+    private static JavaPairRDD <Integer, int[]> fonl(JavaPairRDD <Integer, int[]> neighbors) {
         return neighbors.flatMapToPair(t -> {
             int deg = t._2.length;
             if (deg == 0)
@@ -186,8 +186,6 @@ public class Triangle {
                         higherDegs[i] = list.get(i - 1).vertex;
 
                     return new Tuple2 <>(v._1, higherDegs);
-                })
-                .repartition(numPartitions)
-                .persist(StorageLevel.MEMORY_AND_DISK());
+                }).persist(StorageLevel.MEMORY_AND_DISK());
     }
 }
