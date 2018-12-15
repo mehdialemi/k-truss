@@ -37,7 +37,8 @@ public class EdgeLoader {
     }
 
     public static JavaPairRDD <Integer, int[]> createNeighbors(JavaPairRDD <Integer, Integer> edges) {
-        return edges.groupByKey().mapToPair(t -> {
+        int numPartitions = edges.getNumPartitions();
+        return edges.groupByKey(numPartitions).mapToPair(t -> {
             IntSet set = new IntOpenHashSet();
             for (Integer v : t._2) {
                 set.add(v.intValue());
