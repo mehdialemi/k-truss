@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a2beea7d-c8f5-4c3e-a25e-d337339fdce2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="a2beea7d-c8f5-4c3e-a25e-d337339fdce2" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,7 +41,7 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="gitignore" value="12" />
-          <entry key="java" value="8157" />
+          <entry key="java" value="8159" />
           <entry key="sh" value="628" />
           <entry key="xml" value="105" />
         </counts>
@@ -52,7 +50,7 @@
         <counts>
           <entry key="Bash" value="628" />
           <entry key="Git file" value="12" />
-          <entry key="JAVA" value="8157" />
+          <entry key="JAVA" value="8159" />
           <entry key="XML" value="105" />
         </counts>
       </usages-collector>
@@ -123,8 +121,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="48">
-              <caret line="138" column="38" selection-start-line="138" selection-start-column="16" selection-end-line="138" selection-end-column="38" />
+            <state relative-caret-position="-27">
+              <caret line="79" column="53" selection-start-line="79" selection-start-column="51" selection-end-line="79" selection-end-column="53" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -175,11 +173,11 @@
         <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/EdgeLoader.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/bin/deploy.sh" />
-        <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java" />
         <option value="$PROJECT_DIR$/bin/run-spark.sh" />
         <option value="$PROJECT_DIR$/bin/ktruss.sh" />
         <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KCore.java" />
         <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java" />
       </list>
     </option>
   </component>
@@ -316,12 +314,12 @@
       <updated>1544880792049</updated>
       <workItem from="1544880794462" duration="15396000" />
       <workItem from="1544904413511" duration="14627000" />
-      <workItem from="1544919255370" duration="363000" />
+      <workItem from="1544919255370" duration="617000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30386000" />
+    <option name="totallyTimeSpent" value="30640000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -350,7 +348,7 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286385" />
-      <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49960032" weight="0.33020344" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="7" sideWeight="0.49960032" visible="true" weight="0.33020344" />
       <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.5003997" side_tool="true" weight="0.3286385" />
       <window_info anchor="bottom" id="Messages" order="9" weight="0.3286385" />
       <window_info anchor="bottom" id="Java Enterprise" order="10" />
@@ -478,8 +476,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="138" column="38" selection-start-line="138" selection-start-column="16" selection-end-line="138" selection-end-column="38" />
+        <state relative-caret-position="-27">
+          <caret line="79" column="53" selection-start-line="79" selection-start-column="51" selection-end-line="79" selection-end-column="53" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
