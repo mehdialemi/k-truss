@@ -18,7 +18,7 @@ public class Triangle {
     public static final byte U_SIGN = (byte) 2;
 
     public static JavaPairRDD <Edge, int[]> createTSet(JavaPairRDD <Integer, int[]> neighbors, int numPartitions) {
-        JavaPairRDD <Integer, int[]> fonl = fonl(neighbors);
+        JavaPairRDD <Integer, int[]> fonl = fonl(neighbors, numPartitions);
         JavaPairRDD <Integer, int[]> candidates = fonl.filter(t -> t._2.length > 2)
                 .flatMapToPair(t -> {
 
@@ -137,7 +137,7 @@ public class Triangle {
                 }).persist(StorageLevel.MEMORY_AND_DISK());
     }
 
-    private static JavaPairRDD <Integer, int[]> fonl(JavaPairRDD <Integer, int[]> neighbors) {
+    private static JavaPairRDD <Integer, int[]> fonl(JavaPairRDD <Integer, int[]> neighbors, int numPartition) {
         return neighbors.flatMapToPair(t -> {
             int deg = t._2.length;
             if (deg == 0)
@@ -152,7 +152,7 @@ public class Triangle {
             }
 
             return degreeList.iterator();
-        }).groupByKey()
+        }).groupByKey(numPartition)
                 .mapToPair(v -> {
                     int degree = 0;
                     // Iterate over higherIds to calculate degree of the current vertex
