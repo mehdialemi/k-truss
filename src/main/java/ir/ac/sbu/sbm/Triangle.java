@@ -143,8 +143,8 @@ public class Triangle {
             if (deg == 0)
                 return Collections.emptyIterator();
 
-            int[] vd = new int[] {t._1, deg};
-            List <Tuple2 <Integer, int[]>> degreeList = new ArrayList <>(deg);
+            Tuple2<Integer, Integer> vd = new Tuple2 <>(t._1, deg);
+            List <Tuple2 <Integer, Tuple2<Integer, Integer>>> degreeList = new ArrayList <>();
 
             // Add degree information of the current vertex to its neighbor
             for (int neighbor : t._2) {
@@ -159,26 +159,26 @@ public class Triangle {
                     if (v._2 == null)
                         return new Tuple2 <>(v._1, new int[]{0});
 
-                    for (int[] vd : v._2) {
+                    for (Tuple2<Integer, Integer> vd : v._2) {
                         degree++;
                     }
 
-                    List <int[]> list = new ArrayList <>();
-                    for (int[] vd : v._2)
-                        if (vd[1] > degree || (vd[1] == degree && vd[0] > v._1))
+                    List <Tuple2<Integer, Integer>> list = new ArrayList <>();
+                    for (Tuple2 <Integer, Integer> vd : v._2)
+                        if (vd._2 > degree || (vd._2 == degree && vd._1 > v._1))
                             list.add(vd);
 
-                    Collections.sort(list, (a, b) -> {
-                        int diff = a[1] - b[1];
-                        if(diff == 0)
-                            return a[0] - b[0];
+                    list.sort((a, b) -> {
+                        int diff = a._2 - b._2;
+                        if (diff == 0)
+                            return a._1 - b._1;
                         return diff;
                     });
 
                     int[] higherDegs = new int[list.size() + 1];
                     higherDegs[0] = degree;
                     for (int i = 1; i < higherDegs.length; i++)
-                        higherDegs[i] = list.get(i - 1)[0];
+                        higherDegs[i] = list.get(i - 1)._1;
 
                     return new Tuple2 <>(v._1, higherDegs);
                 }).persist(StorageLevel.MEMORY_AND_DISK());
