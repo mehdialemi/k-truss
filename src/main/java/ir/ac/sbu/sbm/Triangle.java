@@ -4,13 +4,11 @@ import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import it.unimi.dsi.fastutil.bytes.ByteList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.storage.StorageLevel;
 import scala.Tuple2;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public class Triangle {
 
@@ -18,11 +16,8 @@ public class Triangle {
     public static final byte W_SIGN = (byte) 0;
     public static final byte V_SIGN = (byte) 1;
     public static final byte U_SIGN = (byte) 2;
-    public static final byte H_SIGN = (byte) 3;
-    private static final byte[] H_SIGN_ARRAY = new byte[]{H_SIGN};
 
-    public static JavaPairRDD <Edge, int[]> createTSet(JavaPairRDD <Integer, int[]> neighbors,
-                                                       int numPartitions, final int h) {
+    public static JavaPairRDD <Edge, int[]> createTSet(JavaPairRDD <Integer, int[]> neighbors, int numPartitions) {
         JavaPairRDD <Integer, int[]> fonl = fonl(neighbors);
         JavaPairRDD <Integer, int[]> candidates = fonl.filter(t -> t._2.length > 2)
                 .flatMapToPair(t -> {
@@ -50,8 +45,6 @@ public class Triangle {
         return fonl.cogroup(candidates, numPartitions)
                 .mapPartitionsToPair(partitions -> {
                     Map <Edge, Tuple2 <IntList, ByteList>> map = new HashMap <>();
-
-                    Object2IntOpenHashMap <Edge> hmap = new Object2IntOpenHashMap <>();
                     while (partitions.hasNext()) {
                         Tuple2 <Integer, Tuple2 <Iterable <int[]>, Iterable <int[]>>> t = partitions.next();
                         int[] fVal = t._2._1.iterator().next();
@@ -76,41 +69,17 @@ public class Triangle {
                                     Edge vw = new Edge(v, w);
                                     Tuple2 <IntList, ByteList> tuple;
 
-                                    if (hmap.containsKey(uv)) {
-                                        hmap.addTo(uv, 1);
-                                    } else {
-                                        tuple = map.computeIfAbsent(uv, k -> new Tuple2 <>(new IntArrayList(), new ByteArrayList()));
-                                        tuple._1.add(w);
-                                        tuple._2.add(W_SIGN);
-                                        if (tuple._1.size() > h) {
-                                            map.remove(uv);
-                                            hmap.put(uv, tuple._1.size());
-                                        }
-                                    }
+                                    tuple = map.computeIfAbsent(uv, k -> new Tuple2 <>(new IntArrayList(), new ByteArrayList()));
+                                    tuple._1.add(w);
+                                    tuple._2.add(W_SIGN);
 
-                                    if (hmap.containsKey(uw)) {
-                                        hmap.addTo(uw, 1);
-                                    } else {
-                                        tuple = map.computeIfAbsent(uw, k -> new Tuple2 <>(new IntArrayList(), new ByteArrayList()));
-                                        tuple._1.add(v);
-                                        tuple._2.add(V_SIGN);
-                                        if (tuple._1.size() > h) {
-                                            map.remove(uw);
-                                            hmap.put(uw, tuple._1.size());
-                                        }
-                                    }
+                                    tuple = map.computeIfAbsent(uw, k -> new Tuple2 <>(new IntArrayList(), new ByteArrayList()));
+                                    tuple._1.add(v);
+                                    tuple._2.add(V_SIGN);
 
-                                    if (hmap.containsKey(vw)) {
-                                        hmap.addTo(vw, 1);
-                                    } else {
-                                        tuple = map.computeIfAbsent(vw, k -> new Tuple2 <>(new IntArrayList(), new ByteArrayList()));
-                                        tuple._1.add(u);
-                                        tuple._2.add(U_SIGN);
-                                        if (tuple._1.size() > h) {
-                                            map.remove(vw);
-                                            hmap.put(vw, tuple._1.size());
-                                        }
-                                    }
+                                    tuple = map.computeIfAbsent(vw, k -> new Tuple2 <>(new IntArrayList(), new ByteArrayList()));
+                                    tuple._1.add(u);
+                                    tuple._2.add(U_SIGN);
 
                                     fi++;
                                     ci++;
@@ -119,19 +88,13 @@ public class Triangle {
                         }
                     }
 
-                    Stream <Tuple2 <Edge, Tuple2<int[], byte[]>>> hstream = hmap.entrySet()
+                    Iterator <Tuple2 <Edge, Tuple2 <int[], byte[]>>> result = map.entrySet()
                             .stream()
                             .map(entry -> new Tuple2 <>(
                                     entry.getKey(),
-                                    new Tuple2<>(new int[] {entry.getValue()}, H_SIGN_ARRAY)));
-
-                    Stream <Tuple2 <Edge, Tuple2 <int[], byte[]>>> lstream = map.entrySet()
-                            .stream()
-                            .map(entry -> new Tuple2 <>(
-                                    entry.getKey(),
-                                    new Tuple2 <>(entry.getValue()._1.toIntArray(), entry.getValue()._2.toByteArray())));
-
-                    return Stream.concat(hstream, lstream).iterator();
+                                    new Tuple2 <>(entry.getValue()._1.toIntArray(), entry.getValue()._2.toByteArray())))
+                            .iterator();
+                    return result;
                 })
                 .groupByKey()
                 .mapValues(values -> {
@@ -139,41 +102,23 @@ public class Triangle {
                     IntList vList = new IntArrayList();
                     IntList uList = new IntArrayList();
 
-                    int sup = 0;
                     for (Tuple2 <int[], byte[]> value : values) {
                         int[] vertices = value._1;
                         byte[] signs = value._2;
                         for (int i = 0; i < vertices.length; i++) {
-                            if (sup > h) {
-                                if (signs[i] == H_SIGN)
-                                    sup += vertices[i];
-                                else
-                                    sup ++;
-                                continue;
-                            }
                             switch (signs[i]) {
                                 case W_SIGN:
                                     wList.add(vertices[i]);
-                                    sup ++;
                                     break;
                                 case V_SIGN:
                                     vList.add(vertices[i]);
-                                    sup ++;
                                     break;
                                 case U_SIGN:
                                     uList.add(vertices[i]);
-                                    sup ++;
                                     break;
-                                case H_SIGN:
-                                    sup += vertices[i];
                             }
                         }
                     }
-
-                    if (sup > h) {
-                        return new int[] {-sup};
-                    }
-
                     int offsetW = META_LEN;
                     int offsetV = wList.size() + META_LEN;
                     int offsetU = wList.size() + vList.size() + META_LEN;
