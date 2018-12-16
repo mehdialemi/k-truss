@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a2beea7d-c8f5-4c3e-a25e-d337339fdce2" name="Default Changelist" comment="" />
+    <list default="true" id="a2beea7d-c8f5-4c3e-a25e-d337339fdce2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,7 +45,7 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="gitignore" value="12" />
-          <entry key="java" value="8848" />
+          <entry key="java" value="8932" />
           <entry key="sh" value="628" />
           <entry key="txt" value="5" />
           <entry key="xml" value="105" />
@@ -53,7 +55,7 @@
         <counts>
           <entry key="Bash" value="628" />
           <entry key="Git file" value="12" />
-          <entry key="JAVA" value="8848" />
+          <entry key="JAVA" value="8932" />
           <entry key="PLAIN_TEXT" value="5" />
           <entry key="XML" value="105" />
         </counts>
@@ -67,11 +69,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="468">
-              <caret line="59" column="54" lean-forward="true" selection-start-line="59" selection-start-column="54" selection-end-line="59" selection-end-column="54" />
+            <state relative-caret-position="273">
+              <caret line="172" lean-forward="true" selection-start-line="172" selection-end-line="172" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -106,11 +108,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="44" column="58" selection-start-line="44" selection-start-column="58" selection-end-line="44" selection-end-column="58" />
+            <state relative-caret-position="90">
+              <caret line="20" column="75" lean-forward="true" selection-start-line="20" selection-start-column="75" selection-end-line="20" selection-end-column="75" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -167,8 +169,8 @@
         <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/MaxTruss.java" />
         <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/TSetValue.java" />
         <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle2.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java" />
         <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java" />
       </list>
     </option>
   </component>
@@ -307,12 +309,12 @@
       <workItem from="1544904413511" duration="14627000" />
       <workItem from="1544919255370" duration="1450000" />
       <workItem from="1544945643393" duration="4371000" />
-      <workItem from="1544988748159" duration="3684000" />
+      <workItem from="1544988748159" duration="5289000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39528000" />
+    <option name="totallyTimeSpent" value="41133000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -325,6 +327,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="66" y="-11" width="1301" height="780" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2629896" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -469,20 +472,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="59" column="54" lean-forward="true" selection-start-line="59" selection-start-column="54" selection-end-line="59" selection-end-column="54" />
+        <state relative-caret-position="90">
+          <caret line="20" column="75" lean-forward="true" selection-start-line="20" selection-start-column="75" selection-end-line="20" selection-end-column="75" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="44" column="58" selection-start-line="44" selection-start-column="58" selection-end-line="44" selection-end-column="58" />
+        <state relative-caret-position="273">
+          <caret line="172" lean-forward="true" selection-start-line="172" selection-end-line="172" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

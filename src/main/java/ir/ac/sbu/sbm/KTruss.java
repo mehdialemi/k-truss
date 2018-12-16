@@ -58,11 +58,10 @@ public class KTruss {
         JavaPairRDD <Integer, int[]> kCore = KCore.find(k - 1, neighbors, kCoreIterations);
 
         JavaPairRDD <Edge, int[]> tSet = Triangle.createTSet(kCore, partitions);
-        return process(k - 2, tSet);
+        return process(k - 2, tSet, partitions);
     }
 
-    private static JavaPairRDD <Edge, int[]> process(final int minSup, JavaPairRDD <Edge, int[]> tSet) {
-        int numPartitions = tSet.getNumPartitions();
+    private static JavaPairRDD <Edge, int[]> process(final int minSup, JavaPairRDD <Edge, int[]> tSet, int numPartitions) {
 
         Queue <JavaPairRDD <Edge, int[]>> tSetQueue = new LinkedList <>();
         Queue <JavaPairRDD <Edge, int[]>> invQueue = new LinkedList <>();
@@ -134,7 +133,7 @@ public class KTruss {
                         }
 
                         return out.iterator();
-                    }).groupByKey(numPartitions);
+                    }).groupByKey();
 
             // Remove the invalid vertices from the triangle vertex set of each remaining (valid) edge.
             tSet = tSet.filter(kv -> kv._2[0] >= minSup).leftOuterJoin(invUpdates)
@@ -164,8 +163,13 @@ public class KTruss {
                         // When the triangle vertex iSet has no other element then the current edge should also
                         // be eliminated from the current tvSets.
                         return set;
-                    })
-                    .persist(StorageLevel.MEMORY_AND_DISK());
+                    });
+
+            if (iter == 3) {
+                tSet = tSet.repartition(numPartitions);
+            }
+
+            tSet = tSet.persist(StorageLevel.MEMORY_AND_DISK());
 
             tSetQueue.add(tSet);
         }
