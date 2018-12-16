@@ -23,12 +23,11 @@ public class KCore {
             long count = invalids.count();
             long t2 = System.currentTimeMillis();
             long duration = t2 - t1;
-            System.out.println("K-core, invalids: " + count + ", duration: " + duration);
+            System.out.println("K-core, iter: " + (iter + 1) + ", invalids: " + count + ", duration: " + duration);
 
             if (count == 0)
                 break;
 
-            iterations = iter + 1;
             JavaPairRDD <Integer, Iterable <Integer>> invUpdate = invalids
                     .flatMapToPair(nl -> {
                         List <Tuple2 <Integer, Integer>> out = new ArrayList <>(nl._2.length);
