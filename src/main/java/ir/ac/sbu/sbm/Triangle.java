@@ -42,7 +42,7 @@ public class Triangle {
                     return output.iterator();
                 });
 
-        return fonl.cogroup(candidates, numPartitions)
+        return fonl.cogroup(candidates, numPartitions * 10)
                 .mapPartitionsToPair(partitions -> {
                     Map <Edge, Tuple2 <IntList, ByteList>> map = new HashMap <>();
                     while (partitions.hasNext()) {
@@ -138,47 +138,49 @@ public class Triangle {
     }
 
     private static JavaPairRDD <Integer, int[]> fonl(JavaPairRDD <Integer, int[]> neighbors, int numPartition) {
-        return neighbors.flatMapToPair(t -> {
-            int deg = t._2.length;
-            if (deg == 0)
-                return Collections.emptyIterator();
+        return neighbors
+                .repartition(numPartition)
+                .flatMapToPair(t -> {
+                    int deg = t._2.length;
+                    if (deg == 0)
+                        return Collections.emptyIterator();
 
-            Tuple2<Integer, Integer> vd = new Tuple2 <>(t._1, deg);
-            List <Tuple2 <Integer, Tuple2<Integer, Integer>>> degreeList = new ArrayList <>();
+                    int[] vd = new int[]{t._1, deg};
+                    List <Tuple2 <Integer, int[]>> degreeList = new ArrayList <>(deg);
 
-            // Add degree information of the current vertex to its neighbor
-            for (int neighbor : t._2) {
-                degreeList.add(new Tuple2 <>(neighbor, vd));
-            }
+                    // Add degree information of the current vertex to its neighbor
+                    for (int neighbor : t._2) {
+                        degreeList.add(new Tuple2 <>(neighbor, vd));
+                    }
 
-            return degreeList.iterator();
-        }).groupByKey(numPartition)
+                    return degreeList.iterator();
+                }).groupByKey()
                 .mapToPair(v -> {
                     int degree = 0;
                     // Iterate over higherIds to calculate degree of the current vertex
                     if (v._2 == null)
                         return new Tuple2 <>(v._1, new int[]{0});
 
-                    for (Tuple2<Integer, Integer> vd : v._2) {
+                    for (int[] vd : v._2) {
                         degree++;
                     }
 
-                    List <Tuple2<Integer, Integer>> list = new ArrayList <>();
-                    for (Tuple2 <Integer, Integer> vd : v._2)
-                        if (vd._2 > degree || (vd._2 == degree && vd._1 > v._1))
+                    List <int[]> list = new ArrayList <>();
+                    for (int[] vd : v._2)
+                        if (vd[1] > degree || (vd[1] == degree && vd[0] > v._1))
                             list.add(vd);
 
-                    list.sort((a, b) -> {
-                        int diff = a._2 - b._2;
+                    Collections.sort(list, (a, b) -> {
+                        int diff = a[1] - b[1];
                         if (diff == 0)
-                            return a._1 - b._1;
+                            return a[0] - b[0];
                         return diff;
                     });
 
                     int[] higherDegs = new int[list.size() + 1];
                     higherDegs[0] = degree;
                     for (int i = 1; i < higherDegs.length; i++)
-                        higherDegs[i] = list.get(i - 1)._1;
+                        higherDegs[i] = list.get(i - 1)[0];
 
                     return new Tuple2 <>(v._1, higherDegs);
                 }).persist(StorageLevel.MEMORY_AND_DISK());
