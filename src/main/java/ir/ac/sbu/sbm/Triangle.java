@@ -24,8 +24,6 @@ public class Triangle {
     public static JavaPairRDD <Edge, int[]> createTSet(JavaPairRDD <Integer, int[]> neighbors,
                                                        int numPartitions, final int h) {
         JavaPairRDD <Integer, int[]> fonl = fonl(neighbors);
-        System.out.println("fonl count: " + fonl.count());
-
         JavaPairRDD <Integer, int[]> candidates = fonl.filter(t -> t._2.length > 2)
                 .flatMapToPair(t -> {
 
