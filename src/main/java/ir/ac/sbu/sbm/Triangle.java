@@ -42,7 +42,7 @@ public class Triangle {
                     return output.iterator();
                 });
 
-        return fonl.cogroup(candidates, numPartitions * 10)
+        return fonl.cogroup(candidates, numPartitions * 5)
                 .mapPartitionsToPair(partitions -> {
                     Map <Edge, Tuple2 <IntList, ByteList>> map = new HashMap <>();
                     while (partitions.hasNext()) {
