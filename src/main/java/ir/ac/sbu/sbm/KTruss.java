@@ -57,10 +57,7 @@ public class KTruss {
 
         JavaPairRDD <Integer, int[]> kCore = KCore.find(k - 1, neighbors, kCoreIterations);
 
-        long t1 = System.currentTimeMillis();
         JavaPairRDD <Edge, int[]> tSet = Triangle.createTSet(kCore, partitions);
-        System.out.println("tSet count: " + tSet.count() + ", time: " + (System.currentTimeMillis() - t1) + " ms");
-
         return process(k - 2, tSet);
     }
 
