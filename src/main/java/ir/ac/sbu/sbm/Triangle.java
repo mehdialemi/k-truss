@@ -143,8 +143,8 @@ public class Triangle {
             if (deg == 0)
                 return Collections.emptyIterator();
 
-            VertexDeg vd = new VertexDeg(t._1, deg);
-            List <Tuple2 <Integer, VertexDeg>> degreeList = new ArrayList <>(deg);
+            int[] vd = new int[] {t._1, deg};
+            List <Tuple2 <Integer, int[]>> degreeList = new ArrayList <>(deg);
 
             // Add degree information of the current vertex to its neighbor
             for (int neighbor : t._2) {
@@ -159,31 +159,26 @@ public class Triangle {
                     if (v._2 == null)
                         return new Tuple2 <>(v._1, new int[]{0});
 
-                    for (VertexDeg vd : v._2) {
+                    for (int[] vd : v._2) {
                         degree++;
                     }
 
-                    List <VertexDeg> list = new ArrayList <>();
-                    for (VertexDeg vd : v._2)
-                        if (vd.degree > degree || (vd.degree == degree && vd.vertex > v._1))
+                    List <int[]> list = new ArrayList <>();
+                    for (int[] vd : v._2)
+                        if (vd[1] > degree || (vd[1] == degree && vd[0] > v._1))
                             list.add(vd);
 
                     Collections.sort(list, (a, b) -> {
-                        int x, y;
-                        if (a.degree != b.degree) {
-                            x = a.degree;
-                            y = b.degree;
-                        } else {
-                            x = a.vertex;
-                            y = b.vertex;
-                        }
-                        return x - y;
+                        int diff = a[1] - b[1];
+                        if(diff == 0)
+                            return a[0] - b[0];
+                        return diff;
                     });
 
                     int[] higherDegs = new int[list.size() + 1];
                     higherDegs[0] = degree;
                     for (int i = 1; i < higherDegs.length; i++)
-                        higherDegs[i] = list.get(i - 1).vertex;
+                        higherDegs[i] = list.get(i - 1)[0];
 
                     return new Tuple2 <>(v._1, higherDegs);
                 }).persist(StorageLevel.MEMORY_AND_DISK());
