@@ -40,7 +40,9 @@ public class Triangle {
                     }
 
                     return output.iterator();
-                });
+                }).repartition(numPartitions).persist(StorageLevel.MEMORY_AND_DISK());
+
+        System.out.println("candidates count: " + candidates.count());
 
         return fonl.cogroup(candidates, numPartitions * 5)
                 .mapPartitionsToPair(partitions -> {
