@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a2beea7d-c8f5-4c3e-a25e-d337339fdce2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/KTruss.java" afterDir="false" />
-    </list>
+    <list default="true" id="a2beea7d-c8f5-4c3e-a25e-d337339fdce2" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -309,12 +307,12 @@
       <workItem from="1544904413511" duration="14627000" />
       <workItem from="1544919255370" duration="1450000" />
       <workItem from="1544945643393" duration="4371000" />
-      <workItem from="1544988748159" duration="5289000" />
+      <workItem from="1544988748159" duration="5867000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41133000" />
+    <option name="totallyTimeSpent" value="41711000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -327,7 +325,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="66" y="-11" width="1301" height="780" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2629896" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />

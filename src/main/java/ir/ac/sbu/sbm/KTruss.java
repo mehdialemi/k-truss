@@ -9,6 +9,8 @@ import org.apache.spark.storage.StorageLevel;
 import scala.Tuple2;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,7 +21,7 @@ public class KTruss {
     public static final int META_LEN = 4;
     public static final int CHECKPOINT_ITERATION = 50;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws URISyntaxException {
         ArgumentReader argumentReader = new ArgumentReader(args);
         String input = argumentReader.nextString("/home/mehdi/graph-data/com-youtube.ungraph.txt");
         int k = argumentReader.nextInt(4);
@@ -32,12 +34,18 @@ public class KTruss {
             sparkConf.set("spark.driver.bindAddress", "localhost");
             sparkConf.setMaster("local[" + cores + "]");
         }
+
         sparkConf.setAppName("KTruss-" + k + "-" + new File(input).getName() + "-kc(" + kCoreIteration + ")");
         sparkConf.set("spark.driver.memory", "10g");
         sparkConf.set("spark.driver.maxResultSize", "9g");
         sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
         sparkConf.registerKryoClasses(new Class[]{int[].class, byte[].class, VertexDeg.class, Edge.class});
         JavaSparkContext sc = new JavaSparkContext(sparkConf);
+
+        if (input.startsWith("hdfs")) {
+            String masterHost = new URI(sc.master()).getHost();
+            sc.setCheckpointDir("hdfs://" + masterHost + "/shared/checkpoint");
+        }
 
         System.out.println("Running k-truss with argument input: " + input + ", k: " + k +
                 ", cores: " + cores + ", partitions: " + partitions +
