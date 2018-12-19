@@ -40,7 +40,7 @@ public class Triangle {
                     }
 
                     return output.iterator();
-                });
+                }).repartition(fonl.getNumPartitions());
 
         return fonl.cogroup(candidates)
                 .flatMapToPair(t -> {
