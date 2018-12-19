@@ -162,16 +162,27 @@ public class KTruss {
                             return Collections.singleton(new Tuple2<>(kv._1, set)).iterator();
 
                         for (int i = META_LEN; i < set.length; i++) {
+
+                            if (iSet.size() == 0)
+                                break;
+
                             if (set[i] == INVALID)
                                 continue;
                             if (iSet.contains(set[i])) {
                                 set[0]--;
                                 set[i] = INVALID;
+                                iSet.remove(set[i]);
                             }
                         }
 
                         return Collections.singleton(new Tuple2<>(kv._1, set)).iterator();
-                    }).persist(StorageLevel.MEMORY_AND_DISK());
+                    });
+
+            if (iter == 3) {
+                tSet = tSet.repartition(numPartitions / 5);
+            }
+
+            tSet = tSet.persist(StorageLevel.MEMORY_AND_DISK());
 
             tSetQueue.add(tSet);
         }
