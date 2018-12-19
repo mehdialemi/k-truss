@@ -40,9 +40,9 @@ public class Triangle {
                     }
 
                     return output.iterator();
-                }).repartition(fonl.getNumPartitions());
+                });
 
-        return fonl.cogroup(candidates)
+        return fonl.cogroup(candidates, fonl.getNumPartitions() * 5)
                 .flatMapToPair(t -> {
                     Map <Edge, IntList> wMap = new HashMap <>();
                     Map <Edge, IntList> vMap = new HashMap <>();

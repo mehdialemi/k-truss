@@ -11,10 +11,7 @@ import scala.Tuple2;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class KTruss {
     private static final int INVALID = -1;
@@ -73,6 +70,7 @@ public class KTruss {
 
     private static JavaPairRDD <Edge, int[]> process(final int minSup, JavaPairRDD <Edge, int[]> tSet) {
 
+        int numPartitions = tSet.getNumPartitions();
         Queue <JavaPairRDD <Edge, int[]>> tSetQueue = new LinkedList <>();
         Queue <JavaPairRDD <Edge, int[]>> invQueue = new LinkedList <>();
         tSetQueue.add(tSet);
@@ -114,7 +112,7 @@ public class KTruss {
             // The edges in the key part of invalids key-values should be removed. So, we detect other
             // edges of their involved triangle from their triangle vertex set. Here, we determine the
             // vertices which should be removed from the triangle vertex set related to the other edges.
-            JavaPairRDD <Edge, Iterable <Integer>> invUpdates = tSet
+            JavaPairRDD <Edge, Integer> invUpdate1 = tSet
                     .filter(kv -> kv._2[0] < minSup)
                     .flatMapToPair(kv -> {
                         int i = META_LEN;
@@ -143,23 +141,26 @@ public class KTruss {
                         }
 
                         return out.iterator();
-                    }).groupByKey();
+                    });
+            JavaPairRDD <Edge, Integer> invalidUpdates = invUpdate1.subtractByKey(invalids);
 
             // Remove the invalid vertices from the triangle vertex set of each remaining (valid) edge.
-            tSet = tSet.filter(kv -> kv._2[0] >= minSup).leftOuterJoin(invUpdates)
-                    .mapValues(values -> {
-                        org.apache.spark.api.java.Optional <Iterable <Integer>> invalidUpdate = values._2;
-                        int[] set = values._1;
+            tSet = tSet.filter(kv -> kv._2[0] >= minSup)
+                    .cogroup(invalidUpdates)
+                    .flatMapToPair(kv -> {
+                        Iterator <int[]> tSetVals = kv._2._1.iterator();
+                        if (!tSetVals.hasNext())
+                            return Collections.emptyIterator();
 
-                        // If no invalid vertex is present for the current edge then return the set value.
-                        if (!invalidUpdate.isPresent()) {
-                            return set;
-                        }
-
+                        int[] set = tSetVals.next();
+                        Iterable <Integer> invVals = kv._2._2;
                         IntSet iSet = new IntOpenHashSet();
-                        for (int v : invalidUpdate.get()) {
+                        for (int v : invVals) {
                             iSet.add(v);
                         }
+
+                        if (iSet.size() == 0)
+                            return Collections.singleton(new Tuple2<>(kv._1, set)).iterator();
 
                         for (int i = META_LEN; i < set.length; i++) {
                             if (set[i] == INVALID)
@@ -170,16 +171,8 @@ public class KTruss {
                             }
                         }
 
-                        // When the triangle vertex iSet has no other element then the current edge should also
-                        // be eliminated from the current tvSets.
-                        return set;
+                        return Collections.singleton(new Tuple2<>(kv._1, set)).iterator();
                     }).persist(StorageLevel.MEMORY_AND_DISK());
-
-//            if (iter == 3) {
-//                tSet = tSet.repartition(numPartitions);
-//            }
-
-//            tSet = tSet.persist(StorageLevel.MEMORY_AND_DISK());
 
             tSetQueue.add(tSet);
         }
