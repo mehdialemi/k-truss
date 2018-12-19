@@ -19,7 +19,7 @@ public class Triangle {
 
     public static JavaPairRDD <Edge, int[]> createTSet(JavaPairRDD <Integer, int[]> neighbors) {
         JavaPairRDD <Integer, int[]> fonl = fonl(neighbors);
-        JavaPairRDD <Integer, Iterable <int[]>> candidates = fonl.filter(t -> t._2.length > 2)
+        JavaPairRDD <Integer, int[]> candidates = fonl.filter(t -> t._2.length > 2)
                 .flatMapToPair(t -> {
 
                     int size = t._2.length - 1; // one is for the first index holding node's degree
@@ -40,46 +40,43 @@ public class Triangle {
                     }
 
                     return output.iterator();
-                }).groupByKey();
+                });
 
         return fonl.cogroup(candidates)
                 .flatMapToPair(t -> {
-                    Map<Edge, IntList> wMap = new HashMap <>();
-                    Map<Edge, IntList> vMap = new HashMap <>();
-                    Map<Edge, IntList> uMap = new HashMap <>();
+                    Map <Edge, IntList> wMap = new HashMap <>();
+                    Map <Edge, IntList> vMap = new HashMap <>();
+                    Map <Edge, IntList> uMap = new HashMap <>();
 
                     int[] fVal = t._2._1.iterator().next();
                     Arrays.sort(fVal, 1, fVal.length);
                     int v = t._1;
 
-                    for (Iterable <int[]> cValIter : t._2._2) {
-                        for (int[] cVal : cValIter) {
+                    for (int[] cVal : t._2._2) {
+                        int u = cVal[0];
+                        Edge uv = new Edge(u, v);
 
-                            int u = cVal[0];
-                            Edge uv = new Edge(u, v);
+                        // The intersection determines triangles which u and vertex are two of their vertices.
+                        // Always generate and edge (u, vertex) such that u < vertex.
+                        int fi = 1;
+                        int ci = 1;
+                        while (fi < fVal.length && ci < cVal.length) {
+                            if (fVal[fi] < cVal[ci])
+                                fi++;
+                            else if (fVal[fi] > cVal[ci])
+                                ci++;
+                            else {
+                                int w = fVal[fi];
+                                Edge uw = new Edge(u, w);
+                                Edge vw = new Edge(v, w);
+                                Tuple2 <IntList, ByteList> tuple;
 
-                            // The intersection determines triangles which u and vertex are two of their vertices.
-                            // Always generate and edge (u, vertex) such that u < vertex.
-                            int fi = 1;
-                            int ci = 1;
-                            while (fi < fVal.length && ci < cVal.length) {
-                                if (fVal[fi] < cVal[ci])
-                                    fi++;
-                                else if (fVal[fi] > cVal[ci])
-                                    ci++;
-                                else {
-                                    int w = fVal[fi];
-                                    Edge uw = new Edge(u, w);
-                                    Edge vw = new Edge(v, w);
-                                    Tuple2 <IntList, ByteList> tuple;
+                                wMap.computeIfAbsent(uv, k -> new IntArrayList(cVal.length)).add(w);
+                                vMap.computeIfAbsent(uw, k -> new IntArrayList(1)).add(v);
+                                uMap.computeIfAbsent(vw, k -> new IntArrayList(1)).add(u);
 
-                                    wMap.computeIfAbsent(uv, k -> new IntArrayList(cVal.length)).add(w);
-                                    vMap.computeIfAbsent(uw, k -> new IntArrayList(1)).add(v);
-                                    uMap.computeIfAbsent(vw, k -> new IntArrayList(1)).add(u);
-
-                                    fi++;
-                                    ci++;
-                                }
+                                fi++;
+                                ci++;
                             }
                         }
                     }
@@ -108,9 +105,15 @@ public class Triangle {
 
                     for (Tuple2 <Byte, int[]> value : values) {
                         switch (value._1) {
-                            case W_SIGN: wSize += value._2.length; break;
-                            case V_SIGN: vSize += value._2.length; break;
-                            case U_SIGN: uSize += value._2.length; break;
+                            case W_SIGN:
+                                wSize += value._2.length;
+                                break;
+                            case V_SIGN:
+                                vSize += value._2.length;
+                                break;
+                            case U_SIGN:
+                                uSize += value._2.length;
+                                break;
                         }
                     }
 
