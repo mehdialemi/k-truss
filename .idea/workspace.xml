@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a2beea7d-c8f5-4c3e-a25e-d337339fdce2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java" afterDir="false" />
-    </list>
+    <list default="true" id="a2beea7d-c8f5-4c3e-a25e-d337339fdce2" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -46,7 +44,7 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="gitignore" value="12" />
-          <entry key="java" value="8992" />
+          <entry key="java" value="9037" />
           <entry key="sh" value="628" />
           <entry key="txt" value="5" />
           <entry key="xml" value="105" />
@@ -56,7 +54,7 @@
         <counts>
           <entry key="Bash" value="628" />
           <entry key="Git file" value="12" />
-          <entry key="JAVA" value="8992" />
+          <entry key="JAVA" value="9037" />
           <entry key="PLAIN_TEXT" value="5" />
           <entry key="XML" value="105" />
         </counts>
@@ -112,8 +110,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="63" column="61" lean-forward="true" selection-start-line="63" selection-start-column="61" selection-end-line="63" selection-end-column="61" />
+            <state relative-caret-position="81">
+              <caret line="46" column="57" selection-start-line="46" selection-start-column="56" selection-end-line="46" selection-end-column="57" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -311,12 +309,12 @@
       <workItem from="1544919255370" duration="1450000" />
       <workItem from="1544945643393" duration="4371000" />
       <workItem from="1544988748159" duration="5867000" />
-      <workItem from="1545172495333" duration="1459000" />
+      <workItem from="1545172495333" duration="2807000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43170000" />
+    <option name="totallyTimeSpent" value="44518000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -486,8 +484,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ir/ac/sbu/sbm/Triangle.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="63" column="61" lean-forward="true" selection-start-line="63" selection-start-column="61" selection-end-line="63" selection-end-column="61" />
+        <state relative-caret-position="81">
+          <caret line="46" column="57" selection-start-line="46" selection-start-column="56" selection-end-line="46" selection-end-column="57" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

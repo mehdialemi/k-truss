@@ -40,11 +40,9 @@ public class Triangle {
                     }
 
                     return output.iterator();
-                }).repartition(numPartitions).persist(StorageLevel.MEMORY_AND_DISK());
+                }).repartition(numPartitions);
 
-        System.out.println("candidates count: " + candidates.count());
-
-        return fonl.cogroup(candidates, numPartitions * 5)
+        return fonl.cogroup(candidates)
                 .mapPartitionsToPair(partitions -> {
                     Map <Edge, Tuple2 <IntList, ByteList>> map = new HashMap <>();
                     while (partitions.hasNext()) {
