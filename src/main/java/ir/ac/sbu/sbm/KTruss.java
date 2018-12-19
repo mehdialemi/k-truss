@@ -52,12 +52,12 @@ public class KTruss {
                 ", kCoreIteration: " + kCoreIteration);
 
         long t1 = System.currentTimeMillis();
-        JavaPairRDD <Edge, int[]> subgraph = find(k, sc, input, partitions, kCoreIteration);
+        JavaPairRDD <Edge, int[]> subgraph = find(k, sc, input, kCoreIteration);
         long t2 = System.currentTimeMillis();
         System.out.println("KTruss edge count: " + subgraph.count() + ", duration: " + (t2 - t1) + " ms");
     }
 
-    public static JavaPairRDD <Edge, int[]> find(int k, JavaSparkContext sc, String input, int partitions,
+    public static JavaPairRDD <Edge, int[]> find(int k, JavaSparkContext sc, String input,
                                                  int kCoreIterations) {
         JavaPairRDD <Integer, Integer> edges = EdgeLoader.load(sc, input);
 
@@ -65,11 +65,11 @@ public class KTruss {
 
         JavaPairRDD <Integer, int[]> kCore = KCore.find(k - 1, neighbors, kCoreIterations);
 
-        JavaPairRDD <Edge, int[]> tSet = Triangle.createTSet(kCore, partitions);
-        return process(k - 2, tSet, partitions);
+        JavaPairRDD <Edge, int[]> tSet = Triangle.createTSet(kCore);
+        return process(k - 2, tSet);
     }
 
-    private static JavaPairRDD <Edge, int[]> process(final int minSup, JavaPairRDD <Edge, int[]> tSet, int numPartitions) {
+    private static JavaPairRDD <Edge, int[]> process(final int minSup, JavaPairRDD <Edge, int[]> tSet) {
 
         Queue <JavaPairRDD <Edge, int[]>> tSetQueue = new LinkedList <>();
         Queue <JavaPairRDD <Edge, int[]>> invQueue = new LinkedList <>();
@@ -171,13 +171,13 @@ public class KTruss {
                         // When the triangle vertex iSet has no other element then the current edge should also
                         // be eliminated from the current tvSets.
                         return set;
-                    });
+                    }).persist(StorageLevel.MEMORY_AND_DISK());
 
-            if (iter == 3) {
-                tSet = tSet.repartition(numPartitions);
-            }
+//            if (iter == 3) {
+//                tSet = tSet.repartition(numPartitions);
+//            }
 
-            tSet = tSet.persist(StorageLevel.MEMORY_AND_DISK());
+//            tSet = tSet.persist(StorageLevel.MEMORY_AND_DISK());
 
             tSetQueue.add(tSet);
         }

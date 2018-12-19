@@ -17,7 +17,7 @@ public class Triangle {
     public static final byte V_SIGN = (byte) 1;
     public static final byte U_SIGN = (byte) 2;
 
-    public static JavaPairRDD <Edge, int[]> createTSet(JavaPairRDD <Integer, int[]> neighbors, int numPartitions) {
+    public static JavaPairRDD <Edge, int[]> createTSet(JavaPairRDD <Integer, int[]> neighbors) {
         JavaPairRDD <Integer, int[]> fonl = fonl(neighbors);
         JavaPairRDD <Integer, Iterable <int[]>> candidates = fonl.filter(t -> t._2.length > 2)
                 .flatMapToPair(t -> {
