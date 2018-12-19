@@ -52,16 +52,18 @@ public class KTruss {
                 ", kCoreIteration: " + kCoreIteration);
 
         long t1 = System.currentTimeMillis();
-        JavaPairRDD <Edge, int[]> subgraph = find(k, sc, input, kCoreIteration);
+        JavaPairRDD <Edge, int[]> subgraph = find(k, sc, input, kCoreIteration, partitions);
         long t2 = System.currentTimeMillis();
         System.out.println("KTruss edge count: " + subgraph.count() + ", duration: " + (t2 - t1) + " ms");
     }
 
     public static JavaPairRDD <Edge, int[]> find(int k, JavaSparkContext sc, String input,
-                                                 int kCoreIterations) {
+                                                 int kCoreIterations, int numPartitions) {
         JavaPairRDD <Integer, Integer> edges = EdgeLoader.load(sc, input);
 
-        JavaPairRDD <Integer, int[]> neighbors = EdgeLoader.createNeighbors(edges);
+        JavaPairRDD <Integer, int[]> neighbors = EdgeLoader.createNeighbors(edges)
+                .repartition(numPartitions)
+                .cache();
 
         JavaPairRDD <Integer, int[]> kCore = KCore.find(k - 1, neighbors, kCoreIterations);
 
