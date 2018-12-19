@@ -112,7 +112,7 @@ public class KTruss {
             // The edges in the key part of invalids key-values should be removed. So, we detect other
             // edges of their involved triangle from their triangle vertex set. Here, we determine the
             // vertices which should be removed from the triangle vertex set related to the other edges.
-            JavaPairRDD <Edge, Integer> invUpdate1 = tSet
+            JavaPairRDD <Edge, Integer> invalidUpdates = tSet
                     .filter(kv -> kv._2[0] < minSup)
                     .flatMapToPair(kv -> {
                         int i = META_LEN;
@@ -142,7 +142,6 @@ public class KTruss {
 
                         return out.iterator();
                     });
-            JavaPairRDD <Edge, Integer> invalidUpdates = invUpdate1.subtractByKey(invalids);
 
             // Remove the invalid vertices from the triangle vertex set of each remaining (valid) edge.
             tSet = tSet.filter(kv -> kv._2[0] >= minSup)
