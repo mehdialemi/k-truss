@@ -17,8 +17,9 @@ public class Triangle {
     public static final byte V_SIGN = (byte) 1;
     public static final byte U_SIGN = (byte) 2;
 
-    public static JavaPairRDD <Edge, int[]> createTSet(JavaPairRDD <Integer, int[]> neighbors) {
+    public static JavaPairRDD <Edge, int[]> createTSet(JavaPairRDD <Integer, int[]> neighbors, int pm) {
         JavaPairRDD <Integer, int[]> fonl = fonl(neighbors);
+        int numPartitions = fonl.getNumPartitions() * pm;
         JavaPairRDD <Integer, int[]> candidates = fonl.filter(t -> t._2.length > 2)
                 .flatMapToPair(t -> {
 
@@ -42,45 +43,48 @@ public class Triangle {
                     return output.iterator();
                 });
 
-        return fonl.cogroup(candidates, fonl.getNumPartitions() * 5)
-                .flatMapToPair(t -> {
+        return fonl.cogroup(candidates, numPartitions)
+                .mapPartitionsToPair(partition -> {
+
                     Map <Edge, IntList> wMap = new HashMap <>();
                     Map <Edge, IntList> vMap = new HashMap <>();
                     Map <Edge, IntList> uMap = new HashMap <>();
 
-                    int[] fVal = t._2._1.iterator().next();
-                    Arrays.sort(fVal, 1, fVal.length);
-                    int v = t._1;
+                    while (partition.hasNext()) {
+                        Tuple2 <Integer, Tuple2 <Iterable <int[]>, Iterable <int[]>>> t = partition.next();
+                        int[] fVal = t._2._1.iterator().next();
+                        Arrays.sort(fVal, 1, fVal.length);
+                        int v = t._1;
 
-                    for (int[] cVal : t._2._2) {
-                        int u = cVal[0];
-                        Edge uv = new Edge(u, v);
+                        for (int[] cVal : t._2._2) {
+                            int u = cVal[0];
+                            Edge uv = new Edge(u, v);
 
-                        // The intersection determines triangles which u and vertex are two of their vertices.
-                        // Always generate and edge (u, vertex) such that u < vertex.
-                        int fi = 1;
-                        int ci = 1;
-                        while (fi < fVal.length && ci < cVal.length) {
-                            if (fVal[fi] < cVal[ci])
-                                fi++;
-                            else if (fVal[fi] > cVal[ci])
-                                ci++;
-                            else {
-                                int w = fVal[fi];
-                                Edge uw = new Edge(u, w);
-                                Edge vw = new Edge(v, w);
-                                Tuple2 <IntList, ByteList> tuple;
+                            // The intersection determines triangles which u and vertex are two of their vertices.
+                            // Always generate and edge (u, vertex) such that u < vertex.
+                            int fi = 1;
+                            int ci = 1;
+                            while (fi < fVal.length && ci < cVal.length) {
+                                if (fVal[fi] < cVal[ci])
+                                    fi++;
+                                else if (fVal[fi] > cVal[ci])
+                                    ci++;
+                                else {
+                                    int w = fVal[fi];
+                                    Edge uw = new Edge(u, w);
+                                    Edge vw = new Edge(v, w);
+                                    Tuple2 <IntList, ByteList> tuple;
 
-                                wMap.computeIfAbsent(uv, k -> new IntArrayList(cVal.length)).add(w);
-                                vMap.computeIfAbsent(uw, k -> new IntArrayList(1)).add(v);
-                                uMap.computeIfAbsent(vw, k -> new IntArrayList(1)).add(u);
+                                    wMap.computeIfAbsent(uv, k -> new IntArrayList()).add(w);
+                                    vMap.computeIfAbsent(uw, k -> new IntArrayList()).add(v);
+                                    uMap.computeIfAbsent(vw, k -> new IntArrayList()).add(u);
 
-                                fi++;
-                                ci++;
+                                    fi++;
+                                    ci++;
+                                }
                             }
                         }
                     }
-
                     Stream <Tuple2 <Edge, Tuple2 <Byte, int[]>>> wStream = wMap.entrySet()
                             .stream()
                             .map(entry -> new Tuple2 <>(entry.getKey(), new Tuple2 <>(W_SIGN, entry.getValue().toIntArray())));
@@ -149,7 +153,6 @@ public class Triangle {
 
     private static JavaPairRDD <Integer, int[]> fonl(JavaPairRDD <Integer, int[]> neighbors) {
         return neighbors
-//                .repartition(numPartition)
                 .flatMapToPair(t -> {
                     int deg = t._2.length;
                     if (deg == 0)
