@@ -15,3 +15,4 @@ ktruss  soc-liveJournal 4 33    3
 ktruss  orkut   4   100  3
 ktruss  friendster  4   200  4
 ktruss  twitter 1998    2000  5
+ktruss  twitter 1998    2000  5

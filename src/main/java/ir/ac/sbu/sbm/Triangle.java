@@ -3,6 +3,7 @@ package ir.ac.sbu.sbm;
 import it.unimi.dsi.fastutil.bytes.ByteList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.storage.StorageLevel;
 import scala.Tuple2;
@@ -17,31 +18,65 @@ public class Triangle {
     public static final byte V_SIGN = (byte) 1;
     public static final byte U_SIGN = (byte) 2;
 
+    public static JavaPairRDD <Edge, Integer> createEdgeSup(JavaPairRDD <Integer, int[]> fonl, int pm) {
+
+        int numPartitions = fonl.getNumPartitions() * pm;
+        JavaPairRDD <Integer, int[]> candidates = candidates(fonl);
+
+        return fonl.cogroup(candidates, numPartitions)
+                .mapPartitionsToPair(partition -> {
+                    Object2IntOpenHashMap <Edge> eSup = new Object2IntOpenHashMap <>();
+
+                    while (partition.hasNext()) {
+                        Tuple2 <Integer, Tuple2 <Iterable <int[]>, Iterable <int[]>>> t = partition.next();
+                        int[] fVal = t._2._1.iterator().next();
+                        Arrays.sort(fVal, 1, fVal.length);
+                        int v = t._1;
+
+                        for (int[] cVal : t._2._2) {
+                            int u = cVal[0];
+                            Edge uv = new Edge(u, v);
+                            int uvSup = 0;
+
+                            // The intersection determines triangles which u and vertex are two of their vertices.
+                            // Always generate and edge (u, vertex) such that u < vertex.
+                            int fi = 1;
+                            int ci = 1;
+                            while (fi < fVal.length && ci < cVal.length) {
+                                if (fVal[fi] < cVal[ci])
+                                    fi++;
+                                else if (fVal[fi] > cVal[ci])
+                                    ci++;
+                                else {
+                                    int w = fVal[fi];
+
+                                    Edge uw = new Edge(u, w);
+                                    Edge vw = new Edge(v, w);
+
+                                    uvSup++;
+                                    eSup.addTo(uw, 1);
+                                    eSup.addTo(vw, 1);
+
+                                    fi++;
+                                    ci++;
+                                }
+                            }
+
+                            if (uvSup > 0)
+                                eSup.addTo(uv, uvSup);
+                        }
+                    }
+                    return eSup.object2IntEntrySet()
+                            .stream()
+                            .map(e -> new Tuple2 <>(e.getKey(), e.getIntValue()))
+                            .iterator();
+                }).reduceByKey((a, b) -> a + b);
+    }
+
     public static JavaPairRDD <Edge, int[]> createTSet(JavaPairRDD <Integer, int[]> neighbors, int pm) {
         JavaPairRDD <Integer, int[]> fonl = fonl(neighbors);
         int numPartitions = fonl.getNumPartitions() * pm;
-        JavaPairRDD <Integer, int[]> candidates = fonl.filter(t -> t._2.length > 2)
-                .flatMapToPair(t -> {
-
-                    int size = t._2.length - 1; // one is for the first index holding node's degree
-
-                    if (size == 1)
-                        return Collections.emptyIterator();
-
-                    List <Tuple2 <Integer, int[]>> output;
-                    output = new ArrayList <>(size);
-
-                    for (int index = 1; index < size; index++) {
-                        int len = size - index;
-                        int[] cvalue = new int[len + 1];
-                        cvalue[0] = t._1; // First vertex in the triangle
-                        System.arraycopy(t._2, index + 1, cvalue, 1, len);
-                        Arrays.sort(cvalue, 1, cvalue.length); // quickSort to comfort with fonl
-                        output.add(new Tuple2 <>(t._2[index], cvalue));
-                    }
-
-                    return output.iterator();
-                });
+        JavaPairRDD <Integer, int[]> candidates = candidates(fonl);
 
         return fonl.cogroup(candidates, numPartitions)
                 .mapPartitionsToPair(partition -> {
@@ -151,7 +186,32 @@ public class Triangle {
                 }).persist(StorageLevel.MEMORY_AND_DISK());
     }
 
-    private static JavaPairRDD <Integer, int[]> fonl(JavaPairRDD <Integer, int[]> neighbors) {
+    private static JavaPairRDD <Integer, int[]> candidates(JavaPairRDD <Integer, int[]> fonl) {
+        return fonl.filter(t -> t._2.length > 2)
+                .flatMapToPair(t -> {
+
+                    int size = t._2.length - 1; // one is for the first index holding node's degree
+
+                    if (size == 1)
+                        return Collections.emptyIterator();
+
+                    List <Tuple2 <Integer, int[]>> output;
+                    output = new ArrayList <>(size);
+
+                    for (int index = 1; index < size; index++) {
+                        int len = size - index;
+                        int[] cvalue = new int[len + 1];
+                        cvalue[0] = t._1; // First vertex in the triangle
+                        System.arraycopy(t._2, index + 1, cvalue, 1, len);
+                        Arrays.sort(cvalue, 1, cvalue.length); // quickSort to comfort with fonl
+                        output.add(new Tuple2 <>(t._2[index], cvalue));
+                    }
+
+                    return output.iterator();
+                });
+    }
+
+    public static JavaPairRDD <Integer, int[]> fonl(JavaPairRDD <Integer, int[]> neighbors) {
         return neighbors
                 .flatMapToPair(t -> {
                     int deg = t._2.length;
